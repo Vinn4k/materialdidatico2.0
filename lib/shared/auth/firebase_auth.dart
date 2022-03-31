@@ -20,7 +20,7 @@ class AuthenticationHelper {
   }
 
   //SIGN IN METHOD
-  Future signIn({required String email, required String password}) async {
+  Future signIn({required String email, required String password,}) async {
     try {
       await _auth.signInWithEmailAndPassword(email: email.replaceAll(' ', ''),
         password: password.replaceAll(' ', ''),);
