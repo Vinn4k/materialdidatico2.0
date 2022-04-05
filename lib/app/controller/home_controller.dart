@@ -83,7 +83,7 @@ class HomeController extends GetxController {
     String email = dataModel.email ?? "";
     String password = dataModel.password ?? "";
     try {
-      await AuthenticationHelper().signIn(email: email, password: password);
+      await AuthenticationHelper(auth: FirebaseAuth.instance).signIn(email: email, password: password);
     } catch (error) {
       final prefs = await SharedPreferences.getInstance();
       prefs.remove("data001");
@@ -104,7 +104,7 @@ class HomeController extends GetxController {
   }
 
   Future<void> logout() async {
-    AuthenticationHelper().signOut().then((value) async {
+    AuthenticationHelper(auth: FirebaseAuth.instance).signOut().then((value) async {
       final prefs = await SharedPreferences.getInstance();
       await prefs.remove("data001");
       Get.offAndToNamed(Routes.INITIAL);

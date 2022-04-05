@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:easmaterialdidatico/app/config/firestore_config.dart';
 
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -7,16 +8,20 @@ import '../interface/data_itens_interface.dart';
 import '../interface/itens_model.dart';
 
 class DataItensProvider implements IDataItens {
+  DataItensProvider({required this.firestore});
+
+    final FirebaseFirestore firestore;
   @override
   Future<QuerySnapshot> getCourses() async {
     QuerySnapshot snapshot =
-        await FirebaseFirestore.instance.collection("cursos").get();
+        await firestore.collection("cursos").getSavy();
+
     return snapshot;
   }
 
   @override
   Future<QuerySnapshot> getModules(String course) async {
-    QuerySnapshot snapshot = await FirebaseFirestore.instance
+    QuerySnapshot snapshot = await firestore
         .collection("modulos")
         .doc(course)
         .collection("modulos")
@@ -51,7 +56,7 @@ class DataItensProvider implements IDataItens {
   @override
   Future<QuerySnapshot> getSubjects(
       String course, String moduleId) async {
-    QuerySnapshot snapshot = await FirebaseFirestore.instance
+    QuerySnapshot snapshot = await firestore
         .collection("modulos")
         .doc(course)
         .collection("modulos")
@@ -60,4 +65,5 @@ class DataItensProvider implements IDataItens {
         .get();
     return snapshot;
   }
+
 }

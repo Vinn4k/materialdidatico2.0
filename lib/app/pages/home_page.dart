@@ -11,6 +11,7 @@ class HomePage extends GetView<HomeController> {
 
   @override
   Widget build(BuildContext context) {
+    QuerySnapshot? cache;
     return Scaffold(
       backgroundColor: AppColors.blue,
       body: SafeArea(
@@ -92,10 +93,16 @@ class HomePage extends GetView<HomeController> {
                       width: sizeForPc,
                       height: constraints.maxHeight,
                       child: FutureBuilder<QuerySnapshot>(
+                        initialData: cache,
                           future: controller.getCourses(),
                           builder: (BuildContext context,
                               AsyncSnapshot<QuerySnapshot> snapshot) {
+
                             if (snapshot.hasData) {
+                              cache=snapshot.data;
+    for (int i= 0; i < snapshot.data!.docs.length; i++) {
+    DocumentSnapshot doc= snapshot.data!.docs.elementAt(i);
+    print(doc.metadata.isFromCache ? "NOT FROM NETWORK" : "FROM NETWORK");}
                               if (snapshot.data?.docs[0]["ativo"] == false) {
                                 return Center(
                                   child: Text(

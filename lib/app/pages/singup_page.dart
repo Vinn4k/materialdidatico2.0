@@ -3,6 +3,7 @@ import 'package:easmaterialdidatico/app/routes/app_routes.dart';
 import 'package:easmaterialdidatico/app/widgets/form_login_widget.dart';
 import 'package:easmaterialdidatico/shared/auth/firebase_auth.dart';
 import 'package:easmaterialdidatico/shared/themes/app_colors.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -124,18 +125,18 @@ class SingupPage extends GetView<SingupController> {
                                     if (_formKey.currentState!.validate()) {
                                       controller.loadingPage.value = true;
 
-                                      await AuthenticationHelper()
+                                      await AuthenticationHelper(auth: FirebaseAuth.instance)
                                           .signUp(
                                               email: email, password: passowrd)
                                           .then((result) async {
                                         if (result == null) {
-                                          await AuthenticationHelper()
+                                          await AuthenticationHelper(auth: FirebaseAuth.instance)
                                               .signIn(
                                                   email: email,
                                                   password: passowrd)
                                               .then(
                                                 (value) async =>
-                                                    await controller.singup(),
+                                                    await controller.singUp(),
                                               );
 
                                           controller.loadingPage.value = false;
@@ -144,7 +145,7 @@ class SingupPage extends GetView<SingupController> {
                                         } else {
                                           controller.loadingPage.value = false;
                                           controller
-                                              .setErrorMessagerForSnack(result);
+                                              .setErrorMenssagerForSnack(result);
                                           Get.snackbar(
                                               "Falha no Cadastro",
                                               controller

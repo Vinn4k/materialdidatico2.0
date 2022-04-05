@@ -1,3 +1,5 @@
+import 'package:easmaterialdidatico/app/bindings/adm_binding.dart';
+import 'package:easmaterialdidatico/app/pages/adm_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:get/get.dart';
@@ -52,7 +54,12 @@ class AppPages {
         name: Routes.PDFVIEW,
         page: () => PdfViewPage(),
         transition: Transition.noTransition,
-        binding: PdfViewerBinding()),
+        binding: PdfViewerBinding())
+    , GetPage(
+        name: Routes.ADMUSERMANAGERTOOLVIEW,
+        page: () =>  AdmPage(),
+        transition: Transition.noTransition,
+        binding: AdmBinding()),
   ];
 }
 

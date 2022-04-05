@@ -13,8 +13,9 @@ class ModuleController extends GetxController {
 
   @override
   Future<void> onInit() async {
+
     if (user == null) {
-      Get.offAndToNamed(Routes.INITIAL);
+      Get.offAndToNamed(Routes.LOGIN);
     }
     _userApp.getUserInfo(user?.uid ?? "");
     super.onInit();

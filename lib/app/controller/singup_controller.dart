@@ -42,12 +42,13 @@ class SingupController extends GetxController {
     }
   }
 
-  setErrorMessagerForSnack(String error) {
+  setErrorMenssagerForSnack(String error) {
     errorMessagerForSnack.value = AuthHanddler().errorFilter(error);
   }
 
-  Future<void> singup() async {
+  Future<void> singUp() async {
     User? user = FirebaseAuth.instance.currentUser;
+
     if (user?.emailVerified == false) {
       user?.sendEmailVerification();
     }

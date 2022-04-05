@@ -28,10 +28,11 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       initialRoute: Routes.INITIAL,
+      getPages: AppPages.routes,
       navigatorObservers: [
         FirebaseAnalyticsObserver(analytics: analytics),
       ],
-      getPages: AppPages.routes,
+
     );
   }
 }
