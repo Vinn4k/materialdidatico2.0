@@ -63,6 +63,8 @@ class ModulePage extends GetView<ModuleController> {
                             ),
                           ),
                         ),
+                      ),SizedBox(
+                        height: Get.height*0.02,
                       ),
                       Expanded(
                         child: SizedBox(

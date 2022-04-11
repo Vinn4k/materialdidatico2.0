@@ -23,7 +23,7 @@ class PdfViewerControllerUi extends GetxController{
 
     if (user == null) {
 
-        Get.offAndToNamed(Routes.INITIAL);
+        Get.offAndToNamed(Routes.LOGIN);
 
     }
    await getUserInfo();

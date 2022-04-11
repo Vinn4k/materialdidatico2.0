@@ -1,10 +1,11 @@
 import 'package:easmaterialdidatico/app/controller/home_controller.dart';
-import 'package:easmaterialdidatico/app/routes/app_routes.dart';
 import 'package:easmaterialdidatico/shared/themes/app_text_stayle.dart';
 import 'package:easmaterialdidatico/shared/themes/app_colors.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import '../widgets/course_button_widget.dart';
 
 class HomePage extends GetView<HomeController> {
   const HomePage({Key? key}) : super(key: key);
@@ -12,6 +13,7 @@ class HomePage extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     QuerySnapshot? cache;
+
     return Scaffold(
       backgroundColor: AppColors.blue,
       body: SafeArea(
@@ -53,7 +55,7 @@ class HomePage extends GetView<HomeController> {
                     ),
                   ),
                   SizedBox(
-                    height: constraints.maxHeight * 0.08,
+                    height: constraints.maxHeight * 0.07,
                   ),
                   Expanded(
                     child: SizedBox(
@@ -65,7 +67,7 @@ class HomePage extends GetView<HomeController> {
                     ),
                   ),
                   SizedBox(
-                    height: constraints.maxHeight * 0.04,
+                    height: constraints.maxHeight * 0.03,
                   ),
                   Expanded(
                     child: SizedBox(
@@ -93,16 +95,20 @@ class HomePage extends GetView<HomeController> {
                       width: sizeForPc,
                       height: constraints.maxHeight,
                       child: FutureBuilder<QuerySnapshot>(
-                        initialData: cache,
+                          initialData: cache,
                           future: controller.getCourses(),
                           builder: (BuildContext context,
                               AsyncSnapshot<QuerySnapshot> snapshot) {
-
                             if (snapshot.hasData) {
-                              cache=snapshot.data;
-    for (int i= 0; i < snapshot.data!.docs.length; i++) {
-    DocumentSnapshot doc= snapshot.data!.docs.elementAt(i);
-    print(doc.metadata.isFromCache ? "NOT FROM NETWORK" : "FROM NETWORK");}
+                              cache = snapshot.data;
+                              for (int i = 0; i <
+                                  snapshot.data!.docs.length; i++) {
+                                DocumentSnapshot doc = snapshot.data!.docs
+                                    .elementAt(i);
+                                print(doc.metadata.isFromCache
+                                    ? "NOT FROM NETWORK"
+                                    : "FROM NETWORK");
+                              }
                               if (snapshot.data?.docs[0]["ativo"] == false) {
                                 return Center(
                                   child: Text(
@@ -113,13 +119,18 @@ class HomePage extends GetView<HomeController> {
                               } else {
                                 return ListView.separated(
                                   itemCount: snapshot.data!.docs.length,
-                                  itemBuilder: (BuildContext context, int index) {
+                                  itemBuilder: (BuildContext context,
+                                      int index) {
                                     Map<String, String> data = {
-                                      "nome": snapshot.data?.docs[index]["nome"],
+                                      "nome": snapshot.data
+                                          ?.docs[index]["nome"],
                                       "id": snapshot.data?.docs[index]["id"],
+
                                     };
                                     return course(
-                                        snapshot.data?.docs[index]["nome"], data);
+                                        snapshot.data?.docs[index]["nome"],
+                                        snapshot.data?.docs[index]["ativo"],
+                                        data, controller);
                                   },
                                   separatorBuilder:
                                       (BuildContext context, int index) {
@@ -159,36 +170,4 @@ class HomePage extends GetView<HomeController> {
     );
   }
 
-  Widget course(String title, Map<String, String> data) {
-    return Container(
-      height: Get.height * 0.08,
-      decoration: BoxDecoration(
-        color: AppColors.orange,
-        borderRadius: BorderRadius.circular(5),
-        border: Border.all(color: Colors.white, width: 2),
-      ),
-      child: InkWell(
-        onTap: () {
-          if (controller.userCourseId
-              .where((item) => item["cursoId"] == data["id"])
-              .isNotEmpty) {
-            Get.toNamed(
-              Routes.MODULE,
-              parameters: data,
-            );
-          } else {
-            Get.snackbar("Aviso", "Você não faz parte deste curso",
-                snackPosition: SnackPosition.BOTTOM);
-          }
-        },
-        child: Center(
-          child: Text(
-            title,
-            style: AppTextStyle.titleRegular,
-            textAlign: TextAlign.center,
-          ),
-        ),
-      ),
-    );
-  }
 }

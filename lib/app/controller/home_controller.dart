@@ -98,18 +98,19 @@ class HomeController extends GetxController {
       if (localData != null) {
         await reAuth();
       } else {
-        Get.offAndToNamed(Routes.INITIAL);
+        Get.offAndToNamed(Routes.LOGIN);
       }
     }
   }
 
   Future<void> logout() async {
-    AuthenticationHelper(auth: FirebaseAuth.instance).signOut().then((value) async {
+    await AuthenticationHelper(auth: FirebaseAuth.instance).signOut();
       final prefs = await SharedPreferences.getInstance();
       await prefs.remove("data001");
-      Get.offAndToNamed(Routes.INITIAL);
-      dispose();
-    });
+    dispose();
+      Get.offAndToNamed(Routes.LOGIN);
+
+
   }
 
   Future<void> _fetchSettingsRemoteForAds() async {

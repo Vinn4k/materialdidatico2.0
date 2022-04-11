@@ -16,6 +16,7 @@ class DataItensProvider implements IDataItens {
     QuerySnapshot snapshot =
         await firestore.collection("cursos").getSavy();
 
+
     return snapshot;
   }
 
@@ -25,7 +26,7 @@ class DataItensProvider implements IDataItens {
         .collection("modulos")
         .doc(course)
         .collection("modulos")
-        .get();
+        .getSavy();
     return snapshot;
   }
 
@@ -62,7 +63,7 @@ class DataItensProvider implements IDataItens {
         .collection("modulos")
         .doc(moduleId)
         .collection("disciplinas")
-        .get();
+        .getSavy();
     return snapshot;
   }
 

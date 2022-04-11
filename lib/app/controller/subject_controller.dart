@@ -16,7 +16,7 @@ class SubjectController extends GetxController{
     super.onInit();
     if (user == null) {
 
-        Get.offAndToNamed(Routes.INITIAL);
+        Get.offAndToNamed(Routes.LOGIN);
 
 
     }

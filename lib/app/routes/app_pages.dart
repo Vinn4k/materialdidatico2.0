@@ -1,5 +1,7 @@
 import 'package:easmaterialdidatico/app/bindings/adm_binding.dart';
+import 'package:easmaterialdidatico/app/bindings/singup_bindings.dart';
 import 'package:easmaterialdidatico/app/pages/adm_page.dart';
+import 'package:easmaterialdidatico/app/pages/singup_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:get/get.dart';
@@ -25,7 +27,7 @@ class AppPages {
     GetPage(
         name: Routes.INITIAL,
         page: () => _homeInitialChange(),
-        transition: Transition.noTransition,
+        transition: Transition.circularReveal,
         binding: _homeInitialChangeBinding()),
     GetPage(
         name: Routes.LOGIN, page: () => LoginPage(), binding: LoginBinding()),
@@ -35,6 +37,11 @@ class AppPages {
         page: () => PasswordReset(),
         transition: Transition.noTransition,
         binding: PasswordResetBinding()),
+    GetPage(
+        name: Routes.SINGUP,
+        page: () => SingupPage(),
+        transition: Transition.noTransition,
+        binding: SingupBindings()),
     GetPage(
         name: Routes.HOME,
         page: () => const HomePage(),
@@ -54,10 +61,10 @@ class AppPages {
         name: Routes.PDFVIEW,
         page: () => PdfViewPage(),
         transition: Transition.noTransition,
-        binding: PdfViewerBinding())
-    , GetPage(
+        binding: PdfViewerBinding()),
+     GetPage(
         name: Routes.ADMUSERMANAGERTOOLVIEW,
-        page: () =>  AdmPage(),
+        page: () =>  const AdmPage(),
         transition: Transition.noTransition,
         binding: AdmBinding()),
   ];
