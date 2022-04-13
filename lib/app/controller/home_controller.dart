@@ -9,7 +9,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ota_update/ota_update.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:device_info_plus/device_info_plus.dart';
-
 import '../../shared/auth/firebase_auth.dart';
 import '../../shared/themes/app_colors.dart';
 import '../data/model/home_pop_show_widget_model.dart';
@@ -19,7 +18,7 @@ import '../data/repository/data_itens_repository.dart';
 import '../data/repository/user_data_info_repository.dart';
 import '../routes/app_routes.dart';
 import '../security/encrypt_service.dart';
-import '../widgets/home_pop_show.dart';
+import '../widgets/home_pop_show_widget.dart';
 
 class HomeController extends GetxController {
   final DataItensRepository _repository = DataItensRepository();
@@ -99,6 +98,8 @@ class HomeController extends GetxController {
         await reAuth();
       } else {
         Get.offAndToNamed(Routes.LOGIN);
+
+
       }
     }
   }

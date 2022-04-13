@@ -8,12 +8,11 @@ import '../controller/login_controller.dart';
 import '../routes/app_routes.dart';
 import '../widgets/form_login_widget.dart';
 
-class LoginPage extends GetView {
+class LoginPage extends GetView<LoginController> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passowrdController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   LoginPage({Key? key}) : super(key: key);
- LoginController controller= Get.put(LoginController());
 
   @override
   Widget build(BuildContext context) {
@@ -228,9 +227,7 @@ class LoginPage extends GetView {
                     : ElevatedButton(
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
-                            controller.loadingPage.value = true;
                             await controller.login(emailController.text, passowrdController.text);
-                            controller.loadingPage.value = false;
                           }
                         },
                         child: const Text(

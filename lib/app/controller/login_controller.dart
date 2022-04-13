@@ -1,4 +1,3 @@
-import 'dart:math';
 
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -35,22 +34,25 @@ class LoginController extends GetxController {
     );
   }
 
-  Future<void> login(String email, String passowrd) async {
+  Future<void> login(String emailParam, String passwordParam) async {
+      String email=emailParam.removeAllWhitespace;
+      String password=passwordParam.removeAllWhitespace;
     await AuthenticationHelper(auth: FirebaseAuth.instance)
-        .signIn(email: email, password: passowrd)
+        .signIn(email: email, password: password)
         .then((result) async {
-      UserCredential _credential;
-      try {
-        _credential = result;
-        sendLoginEvent();
-        EncyptService().encryptAndSave(user: email, password: passowrd);
-        loadingPage.value = false;
-        Get.offAndToNamed(Routes.HOME);
-      } catch (e) {
-        loadingPage.value = false;
-        setErrorMessagerForSnack(result);
-        Get.snackbar("Falha na Autenticação", errorMessagerForSnack.value);
-      }
+
+        if(result is UserCredential){
+          sendLoginEvent();
+          EncyptService().encryptAndSave(user: email, password: password);
+          loadingPage.value = false;
+          Get.offAndToNamed(Routes.HOME);
+        }else{
+          loadingPage.value = false;
+          setErrorMessagerForSnack(result);
+          Get.snackbar("Falha na Autenticação", errorMessagerForSnack.value);
+        }
+
+
     });
   }
 }

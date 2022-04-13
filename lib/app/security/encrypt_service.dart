@@ -1,9 +1,11 @@
 import 'dart:convert';
 
+import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:encrypt/encrypt.dart' as crypto;
 import '../data/model/local_data_model.dart';
 import '../data/model/user_data_model.dart';
+import '../routes/app_routes.dart';
 
 ///serviço de encriptação
 class EncyptService {
@@ -58,6 +60,7 @@ class EncyptService {
     DateTime validateHorous = timeDecrypted.add(const Duration(hours: 4));
     if (DateTime.now().isAfter(validateHorous)) {
       prefs.remove("data001");
+      Get.offAndToNamed(Routes.LOGIN);
     }
     UserDataModel dataModel=UserDataModel();
     dataModel.password=passwordDecrypted;
