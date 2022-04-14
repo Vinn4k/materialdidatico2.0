@@ -77,6 +77,7 @@ class PdfViewPage extends GetView<PdfViewerControllerUi> {
               pdf,
               key: _pdfViewerKey,
               password: controller.password.value,
+              enableTextSelection: false,
               onDocumentLoaded: (doc) {
                 trace.putAttribute(
                     'plataforma', controller.userDiviceType.value);
@@ -112,6 +113,7 @@ class PdfViewPage extends GetView<PdfViewerControllerUi> {
             : SfPdfViewer.network(
           pdf,
           key: _pdfViewerKey,
+          enableTextSelection: false,
           password: controller.password.value,
           onDocumentLoaded: (doc) {
             trace.putAttribute(
