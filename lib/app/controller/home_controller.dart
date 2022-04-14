@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easmaterialdidatico/app/data/interface/data_itens_interface.dart';
+import 'package:easmaterialdidatico/app/data/interface/user_data_info_interface.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
@@ -21,8 +23,8 @@ import '../security/encrypt_service.dart';
 import '../widgets/home_pop_show_widget.dart';
 
 class HomeController extends GetxController {
-  final DataItensRepository _repository = DataItensRepository();
-  final UserDataInfoRepository _dataUserInfo = UserDataInfoRepository();
+  final IDataItens _repository = DataItensRepository();
+  final IUserDataInfo _dataUserInfo = UserDataInfoRepository();
   late PackageInfo packageInfo;
 
   final FirebaseAnalytics _analytics = FirebaseAnalytics.instance;
@@ -54,7 +56,7 @@ class HomeController extends GetxController {
 
   RxList userCourseId = [].obs;
   RxBool showAdds = true.obs;
-  RxString appVerionSever = "1.1.3".obs;
+  RxString appVerisonSever = "1.1.3".obs;
   RxBool updateApp = false.obs;
   RxDouble downloadProgress = 0.0.obs;
   RxString linkApk="".obs;
@@ -142,9 +144,9 @@ class HomeController extends GetxController {
   Future<void> versionCheck() async {
     _monitorRepository.getApInfo().then(
       (value) {
-        appVerionSever.value = value.get("versao");
+        appVerisonSever.value = value.get("versao");
 
-        if (appVersionLocal != appVerionSever.value) {
+        if (appVersionLocal != appVerisonSever.value) {
           set32or64BitApk(value);
           if (!GetPlatform.isWeb) {
             showAdds.value=false;

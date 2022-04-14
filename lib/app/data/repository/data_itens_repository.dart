@@ -9,7 +9,7 @@ import '../interface/itens_model.dart';
 import '../provider/data_itens_provider.dart';
 
 class DataItensRepository extends IDataItens{
-  DataItensProvider provider= DataItensProvider(firestore: FirebaseFirestore.instance);
+  IDataItens provider= DataItensProvider(firestore: FirebaseFirestore.instance);
   @override
   Future<QuerySnapshot> getCourses()async {
   return await provider.getCourses();

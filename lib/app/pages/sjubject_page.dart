@@ -67,16 +67,27 @@ class SubjectPage extends GetView<SubjectController> {
                                             border: Border.all(color: Colors.white),
                                             borderRadius: BorderRadius.circular(5)),
                                         child: ListTile(
-                                          leading: const Icon(
-                                            Icons.picture_as_pdf,
-                                            color: Colors.white,
+                                          leading:  Icon(
+                                            snapshot.data?.docs[index]["ativo"]
+                                                ?   Icons.picture_as_pdf:
+                                            Icons.do_disturb_alt_rounded,
+                                            color: snapshot.data?.docs[index].get("ativo")
+                                                ? Colors.white:
+                                            AppColors.orange,
                                           ),
                                           title: Text(
                                             snapshot.data?.docs[index]["nome"],
-                                            style: AppTextStyle.titleRegularWhite,
+                                            style:snapshot.data?.docs[index]["ativo"]
+                                                ? AppTextStyle.titleRegularWhite:
+                                            AppTextStyle.titleRegularGrey
+                                            ,
                                           ),
-                                          onTap: () => Get.toNamed(Routes.PDFVIEW,
-                                              parameters: data),
+                                          onTap: snapshot.data?.docs[index]["ativo"]? ()  { Get.toNamed(Routes.PDFVIEW,
+                                              parameters: data);}:(){
+                                            Get.snackbar(
+                                                "Aviso", "Disciplina Desabilitada",
+                                                snackPosition: SnackPosition.BOTTOM);
+                                          },
 
                                         ),
                                       );

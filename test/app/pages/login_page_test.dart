@@ -32,6 +32,7 @@ void main() async {
     testWidgets("Ação Clicar em Entrar", (WidgetTester tester) async {
       await tester.pumpWidget(loginPageForTest());
       expect(find.text('Entrar'), findsOneWidget);
+      expect(find.byType(CircularProgressIndicator), findsOneWidget);
 
 
     });

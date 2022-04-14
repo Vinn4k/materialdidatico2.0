@@ -112,7 +112,7 @@ class HomePage extends GetView<HomeController> {
                               if (snapshot.data?.docs[0]["ativo"] == false) {
                                 return Center(
                                   child: Text(
-                                    "Aguardando Liberação",
+                                    "Em Manutenção",
                                     style: AppTextStyle.titleRegularWhite,
                                   ),
                                 );
@@ -127,7 +127,7 @@ class HomePage extends GetView<HomeController> {
                                       "id": snapshot.data?.docs[index]["id"],
 
                                     };
-                                    return course(
+                                    return courseWidget(
                                         snapshot.data?.docs[index]["nome"],
                                         snapshot.data?.docs[index]["ativo"],
                                         data, controller);

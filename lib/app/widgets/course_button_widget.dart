@@ -7,7 +7,7 @@ import '../../shared/themes/app_colors.dart';
 import '../../shared/themes/app_text_stayle.dart';
 import '../routes/app_routes.dart';
 
-Widget course(String title,bool status, Map<String, String> data,HomeController controller) {
+Widget courseWidget(String title,bool status, Map<String, String> data,HomeController controller) {
   return Container(
     height: Get.height * 0.08,
     decoration: BoxDecoration(
