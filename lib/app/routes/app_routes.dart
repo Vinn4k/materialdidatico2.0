@@ -9,7 +9,7 @@ abstract class Routes{
   static const MODULE = '/modulos';
   static const SUBJECT = '/disciplinas';
   static const PDFVIEW = '/pdf';
-  static const ADMUSERMANAGERTOOLVIEW = '/adm/users';
+  static const ActiveAccount = '/ativarconta';
 
 
 

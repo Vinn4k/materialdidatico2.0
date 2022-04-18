@@ -81,7 +81,6 @@ class SingupController extends GetxController {
                   courseIdforSingup.value, moduleIdforSingup.value);}
         );
         loadingPage.value = false;
-
         Get.offAndToNamed(Routes.HOME);
       } else {
         loadingPage.value = false;
@@ -91,11 +90,7 @@ class SingupController extends GetxController {
             errorMessagerForSnack.value);
       }
     });
-    User? user = FirebaseAuth.instance.currentUser;
 
-    if (user?.emailVerified == false) {
-      user?.sendEmailVerification();
-    }
 
 
 

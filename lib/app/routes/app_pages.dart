@@ -6,12 +6,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:get/get.dart';
 
+import '../bindings/active_account_binding.dart';
 import '../bindings/home_binding.dart';
 import '../bindings/login_binding.dart';
 import '../bindings/module_binding.dart';
 import '../bindings/passowrd_reset_binding.dart';
 import '../bindings/pdf_viewer_binding.dart';
 import '../bindings/subject_binding.dart';
+import '../pages/active_account_page.dart';
 import '../pages/home_page.dart';
 import '../pages/login_page.dart';
 import '../pages/module_page.dart';
@@ -42,11 +44,17 @@ class AppPages {
         page: () => SingupPage(),
         transition: Transition.noTransition,
         binding: SingupBindings()),
+
     GetPage(
         name: Routes.HOME,
         page: () => const HomePage(),
         transition: Transition.noTransition,
         binding: HomeBinding()),
+    GetPage(
+        name: Routes.ActiveAccount,
+        page: () =>  const ActiveAccountPage(),
+        transition: Transition.noTransition,
+        binding: ActiveAccountBiding()),
     GetPage(
         name: Routes.MODULE,
         page: () => ModulePage(),
@@ -62,11 +70,7 @@ class AppPages {
         page: () => PdfViewPage(),
         transition: Transition.noTransition,
         binding: PdfViewerBinding()),
-     GetPage(
-        name: Routes.ADMUSERMANAGERTOOLVIEW,
-        page: () =>  const AdmPage(),
-        transition: Transition.noTransition,
-        binding: AdmBinding()),
+
   ];
 }
 

@@ -37,7 +37,8 @@ class LoginController extends GetxController {
   Future<void> login(String emailParam, String passwordParam) async {
       String email=emailParam.removeAllWhitespace;
       String password=passwordParam.removeAllWhitespace;
-    await AuthenticationHelper(auth: FirebaseAuth.instance)
+      loadingPage.value = true;
+      await AuthenticationHelper(auth: FirebaseAuth.instance)
         .signIn(email: email, password: password)
         .then((result) async {
 

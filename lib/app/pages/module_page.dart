@@ -131,7 +131,8 @@ class ModulePage extends GetView<ModuleController> {
                                 Get.toNamed(Routes.SUBJECT, parameters: data);
                               } else {
                                 Get.snackbar(
-                                    "Aviso", "Você não esta inscrito neste módulo",
+                                    "Aviso", "Você não está inscrito neste módulo",
+                                    snackStyle: SnackStyle.FLOATING,
                                     snackPosition: SnackPosition.BOTTOM);
                               }
                             }

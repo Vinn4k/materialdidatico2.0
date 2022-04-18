@@ -43,6 +43,21 @@ class AuthenticationHelper {
       return e.message;
     }
   }
+  Future updateEmail({required String email}) async {
+    try {
+      await auth.currentUser?.updateEmail(email);
+
+    } on FirebaseAuthException catch (e) {
+      return e.message;
+    }
+  }  Future sendVerificationEmail() async {
+    try {
+      await auth.currentUser?.sendEmailVerification();
+
+    } on FirebaseAuthException catch (e) {
+      return e.message;
+    }
+  }
 
   //SIGN OUT METHOD
   Future signOut() async {

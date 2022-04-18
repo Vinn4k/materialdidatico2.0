@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easmaterialdidatico/app/data/interface/data_itens_interface.dart';
 import 'package:easmaterialdidatico/app/data/interface/user_data_info_interface.dart';
+import 'package:easmaterialdidatico/app/services/user_account_check_service.dart';
+import 'package:easmaterialdidatico/app/widgets/group_seclect_pop_show_widget.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
@@ -51,6 +53,8 @@ class HomeController extends GetxController {
       await getCourseID();
       await _analytics.setUserId(id: user.uid);
       await _fetchSettingsRemoteForAds();
+      UserAccountCheckService(firebaseAuth: FirebaseAuth.instance).chekIsAccountActive();
+      // GroupSelectPopShowWidget().showDialog();
     }
   }
 
