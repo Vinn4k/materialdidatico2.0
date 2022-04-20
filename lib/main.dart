@@ -14,13 +14,13 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
    MyApp({Key? key}) : super(key: key);
  final FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+
 
   @override
   Widget build(BuildContext context) {

@@ -14,7 +14,7 @@ class DataItensProvider implements IDataItens {
   @override
   Future<QuerySnapshot> getCourses() async {
     QuerySnapshot snapshot =
-        await firestore.collection("cursos").getSavy();
+        await firestore.collection("cursos").get();
 
 
     return snapshot;
@@ -26,7 +26,7 @@ class DataItensProvider implements IDataItens {
         .collection("modulos")
         .doc(course)
         .collection("modulos")
-        .getSavy();
+        .get();
     return snapshot;
   }
 
@@ -63,7 +63,7 @@ class DataItensProvider implements IDataItens {
         .collection("modulos")
         .doc(moduleId)
         .collection("disciplinas")
-        .getSavy();
+        .get();
     return snapshot;
   }
 

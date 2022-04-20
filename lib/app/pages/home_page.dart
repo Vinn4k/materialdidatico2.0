@@ -143,6 +143,7 @@ class HomePage extends GetView<HomeController> {
                             }
                             return const Center(
                               child: CircularProgressIndicator(
+
                                 color: Colors.white,
                                 backgroundColor: AppColors.orange,
                               ),

@@ -8,10 +8,10 @@ import 'package:get/get.dart';
 class ActiveAccountController extends GetxController {
   late final FirebaseAuth _auth;
   late final AuthenticationHelper _authenticationHelper;
-  late StreamSubscription _sub;
-  late Stream userReloadCheck;
-  StreamController streamController=StreamController();
+  final StreamController<User?> _controller=StreamController();
+  late final   StreamSubscription _sub;
   RxString email = "teste@teste.com".obs;
+  RxString message = "Por Favor Clique no botão Verificar".obs;
   RxBool loading = false.obs;
 
   @override
@@ -21,7 +21,8 @@ class ActiveAccountController extends GetxController {
     email.value = "${_auth.currentUser?.email}";
     super.onInit();
     _auth.currentUser!.emailVerified ? Get.offAndToNamed(Routes.HOME) : null;
-    _sub=streamController.stream.listen((event) {
+    _auth.userChanges().listen((event) {
+    _controller.add(event);
     });
   }
 
@@ -30,17 +31,28 @@ class ActiveAccountController extends GetxController {
     await _authenticationHelper.sendVerificationEmail();
     Get.back();
     loading.value = false;
-   userReloadCheck =
-    Stream.periodic(const Duration(seconds: 15), (int nd) {
-      _auth.currentUser?.reload();
+    message.value="Por Favor verifique sua caixa de email e spam";
+ final Stream  userReloadCheck =
+    Stream.periodic(const Duration(seconds: 5), (int nd) {
       return nd;
     });
-    userReloadCheck.listen((event) {
-      streamController.add(event);
+    StreamSubscription _subUserReload= userReloadCheck.listen((event) {
+      _auth.currentUser?.reload();
     });
-    streamController.stream.listen((event) {
 
-    });
+ _auth.userChanges().listen((event) {
+   _controller.add(event);
+ });
+ _sub =_controller.stream.listen((event) {
+   if(event!.emailVerified){
+     _controller.close();
+     _sub.cancel();
+     _subUserReload.cancel();
+    Get.offAndToNamed(Routes.HOME);
+
+   }
+ });
+
 
 
   }
@@ -54,6 +66,6 @@ class ActiveAccountController extends GetxController {
   @override
   void onClose() async {
     super.onClose();
-    streamController.close();
+    _controller.close();
   }
 }

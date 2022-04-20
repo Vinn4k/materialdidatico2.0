@@ -148,6 +148,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.1"
+  dio:
+    dependency: "direct main"
+    description:
+      name: dio
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.0.6"
   encrypt:
     dependency: "direct main"
     description:
@@ -170,7 +177,7 @@ packages:
     source: hosted
     version: "1.2.0"
   fake_cloud_firestore:
-    dependency: "direct main"
+    dependency: "direct dev"
     description:
       name: fake_cloud_firestore
       url: "https://pub.dartlang.org"
@@ -226,7 +233,7 @@ packages:
     source: hosted
     version: "3.3.14"
   firebase_auth_mocks:
-    dependency: "direct main"
+    dependency: "direct dev"
     description:
       name: firebase_auth_mocks
       url: "https://pub.dartlang.org"
@@ -515,7 +522,7 @@ packages:
     source: hosted
     version: "1.8.0"
   path_provider:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: path_provider
       url: "https://pub.dartlang.org"
@@ -563,6 +570,41 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.5"
+  permission_handler:
+    dependency: "direct main"
+    description:
+      name: permission_handler
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "9.2.0"
+  permission_handler_android:
+    dependency: transitive
+    description:
+      name: permission_handler_android
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "9.0.2+1"
+  permission_handler_apple:
+    dependency: transitive
+    description:
+      name: permission_handler_apple
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "9.0.4"
+  permission_handler_platform_interface:
+    dependency: transitive
+    description:
+      name: permission_handler_platform_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.7.0"
+  permission_handler_windows:
+    dependency: transitive
+    description:
+      name: permission_handler_windows
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.0"
   petitparser:
     dependency: transitive
     description:
@@ -714,49 +756,49 @@ packages:
       name: syncfusion_flutter_core
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "20.1.48"
+    version: "20.1.50"
   syncfusion_flutter_pdf:
     dependency: transitive
     description:
       name: syncfusion_flutter_pdf
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "20.1.48-beta"
+    version: "20.1.50-beta"
   syncfusion_flutter_pdfviewer:
     dependency: "direct main"
     description:
       name: syncfusion_flutter_pdfviewer
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "20.1.48-beta.1"
+    version: "20.1.50-beta"
   syncfusion_pdfviewer_macos:
     dependency: transitive
     description:
       name: syncfusion_pdfviewer_macos
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "20.1.48-beta.1"
+    version: "20.1.50-beta"
   syncfusion_pdfviewer_platform_interface:
     dependency: transitive
     description:
       name: syncfusion_pdfviewer_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "20.1.48-beta.1"
+    version: "20.1.50-beta"
   syncfusion_pdfviewer_web:
     dependency: transitive
     description:
       name: syncfusion_pdfviewer_web
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "20.1.48-beta.1"
+    version: "20.1.50-beta"
   syncfusion_pdfviewer_windows:
     dependency: transitive
     description:
       name: syncfusion_pdfviewer_windows
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "20.1.48-beta.1"
+    version: "20.1.50-beta"
   term_glyph:
     dependency: transitive
     description:

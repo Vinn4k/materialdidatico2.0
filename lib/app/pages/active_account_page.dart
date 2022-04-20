@@ -29,8 +29,12 @@ class ActiveAccountPage extends GetView<ActiveAccountController> {
             children: [
               Text("Sua conta não foi Verificada",
                   style: AppTextStyle.titleHome),
-              Text("Por Favor Clique no botão Verificar",
-                  style: AppTextStyle.titleRegularWhite),
+              Obx(
+                 () {
+                  return Text(controller.message.value,
+                      style: AppTextStyle.titleRegularWhite);
+                }
+              ),
               Center(
                 child: ElevatedButton(
                   onPressed: () {

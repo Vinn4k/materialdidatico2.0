@@ -1,9 +1,10 @@
 import 'dart:convert';
+import 'dart:isolate';
+import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easmaterialdidatico/app/data/interface/data_itens_interface.dart';
 import 'package:easmaterialdidatico/app/data/interface/user_data_info_interface.dart';
 import 'package:easmaterialdidatico/app/services/user_account_check_service.dart';
-import 'package:easmaterialdidatico/app/widgets/group_seclect_pop_show_widget.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
@@ -37,6 +38,7 @@ class HomeController extends GetxController {
 
   @override
   Future<void> onInit() async {
+
     packageInfo = await PackageInfo.fromPlatform();
     appVersionLocal = packageInfo.version;
     await userCheck();
@@ -57,6 +59,7 @@ class HomeController extends GetxController {
       // GroupSelectPopShowWidget().showDialog();
     }
   }
+
 
   RxList userCourseId = [].obs;
   RxBool showAdds = true.obs;
@@ -111,7 +114,8 @@ class HomeController extends GetxController {
   }
 
   Future<void> logout() async {
-    await AuthenticationHelper(auth: FirebaseAuth.instance).signOut();
+
+   await AuthenticationHelper(auth: FirebaseAuth.instance).signOut();
       final prefs = await SharedPreferences.getInstance();
       await prefs.remove("data001");
     dispose();
@@ -255,5 +259,10 @@ List arm64=deviceData["supported64BitAbis"];
     } catch (e) {
       throw ("Falha ao atualizar");
     }
+  }
+  @override
+  void onClose() {
+    IsolateNameServer.removePortNameMapping('pdfDownload');
+    super.onClose();
   }
 }

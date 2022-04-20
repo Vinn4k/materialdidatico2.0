@@ -3,11 +3,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 extension FirestoreDocumentExtension on DocumentReference {
   Future<DocumentSnapshot> getSavy() async {
     try {
-      DocumentSnapshot ds = await this.get(GetOptions(source: Source.cache));
-      if (ds == null) return this.get(GetOptions(source: Source.server));
+      DocumentSnapshot ds = await get(const GetOptions(source: Source.cache));
+      if (!ds.exists) return get(const GetOptions(source: Source.server));
       return ds;
     } catch (_) {
-      return this.get(GetOptions(source: Source.server));
+      return get(const GetOptions(source: Source.server));
     }
   }
 }
@@ -16,10 +16,10 @@ extension FirestoreDocumentExtension on DocumentReference {
 extension FirestoreQueryExtension on Query {
   Future<QuerySnapshot> getSavy() async {
     try {
-      QuerySnapshot qs = await this.get(GetOptions(source: Source.cache));
-      if (qs.docs.isEmpty) return this.get(GetOptions(source: Source.server));
+      QuerySnapshot qs = await get(const GetOptions(source: Source.cache));
+      if (qs.docs.isEmpty) return get(const GetOptions(source: Source.server));
       return qs;
     } catch (_) {
-      return this.get(GetOptions(source: Source.server));
+      return get(const GetOptions(source: Source.server));
     }
   }}
