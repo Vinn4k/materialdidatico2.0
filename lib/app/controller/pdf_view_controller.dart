@@ -1,4 +1,6 @@
 
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -8,23 +10,23 @@ import 'package:get/get.dart';
 import '../data/model/user_info_model.dart';
 import '../data/repository/user_data_info_repository.dart';
 import '../routes/app_routes.dart';
+import '../services/file_service.dart';
 
 
 
 class PdfViewerControllerUi extends GetxController{
   final UserDataInfoRepository _repository = UserDataInfoRepository();
  final User? user=FirebaseAuth.instance.currentUser;
+  final FileService _service=FileService();
+  final data = Get.parameters;
   FirebaseAnalytics analytics = FirebaseAnalytics.instance;
-
 
 
   @override
   void onInit()async {
-
+    await pdfIsSync();
     if (user == null) {
-
         Get.offAndToNamed(Routes.LOGIN);
-
     }
    await getUserInfo();
     await setDevice();
@@ -39,6 +41,8 @@ await analytics.setUserId(id: user!.uid);
   RxString userID = "".obs;
   RxString userDiviceType="".obs;
   RxString password="O2!iGi%IL6H6Ob0yByjK".obs;
+  RxBool pdfIsSynced=false.obs;
+  RxString offFilePath="".obs;
 
   Future<DocumentSnapshot> getUserInfo() async {
     User? user = FirebaseAuth.instance.currentUser;
@@ -49,8 +53,18 @@ await analytics.setUserId(id: user!.uid);
     UserInfoModel userInfoModel = UserInfoModel.fromJson(data);
     userName.value = userInfoModel.nome!;
     userID.value = uid;
-    userCpf.value = userInfoModel.cpf!;
+    cpfFormatterForPage(userInfoModel.cpf!);
+
     return snapshot;
+  }
+  void cpfFormatterForPage(String cpf){
+    String cpf0=cpf .substring(0,3);
+    String cpf2=cpf .substring(3,6);
+    String cpf3=cpf .substring(6,9);
+    String cpf4=cpf .substring(9,11);
+    userCpf.value="$cpf0.$cpf2.$cpf3-$cpf4";
+
+
   }
 
   double setZoomInPc(){
@@ -61,6 +75,22 @@ await analytics.setUserId(id: user!.uid);
   }
 
   }
+Future<void> downloadPdf({required String url,required String fileName})async{
+
+  await _service.getDirectory(url:url,fileName: fileName);
+}
+Future<bool> pdfIsSync()async{
+    String id=data['id']??"ERROR";
+    final isoffline= await _service.pdfIsSync(id: id);
+    pdfIsSynced.value=isoffline;
+    if(isoffline){
+      File file=await _service.getOffPdf(id: id);
+      offFilePath.value=file.absolute.path;
+
+    }
+
+    return isoffline;
+}
 
 
 

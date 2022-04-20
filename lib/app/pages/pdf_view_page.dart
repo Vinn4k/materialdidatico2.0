@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:easmaterialdidatico/app/controller/pdf_view_controller.dart';
 import 'package:easmaterialdidatico/shared/themes/app_colors.dart';
 import 'package:firebase_performance/firebase_performance.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
+import 'dart:developer' as developer;
 
 class PdfViewPage extends GetView<PdfViewerControllerUi> {
   final GlobalKey<SfPdfViewerState> _pdfViewerKey = GlobalKey();
@@ -19,14 +22,16 @@ class PdfViewPage extends GetView<PdfViewerControllerUi> {
   @override
   Widget build(BuildContext context) {
     String disciplina = data["nome"] ?? "error";
+    String id = data["id"] ?? "error";
+    String pdf = data["linkPdf"] ??
+        "https://firebasestorage.googleapis.com/v0/b/cefops.appspot.com/o/Logo%20Azul%20PDF.pdf?alt=media&token=92d52776-2235-4b7e-a2fa-6fe9e33b0bb1";
     trace = performance.newTrace('PDF Load time');
     trace.putAttribute('disciplina', disciplina);
 
     if (!GetPlatform.isWeb) {
       controller.disableScreenCapture();
     }
-    String pdf = data["linkPdf"] ??
-        "https://firebasestorage.googleapis.com/v0/b/cefops.appspot.com/o/Logo%20Azul%20PDF.pdf?alt=media&token=92d52776-2235-4b7e-a2fa-6fe9e33b0bb1";
+
     startTrace();
     return Scaffold(
       appBar: AppBar(
@@ -35,12 +40,13 @@ class PdfViewPage extends GetView<PdfViewerControllerUi> {
         actions: <Widget>[
           IconButton(
             icon: const Icon(
-              Icons.bookmark,
+              Icons.download,
               color: Colors.white,
               semanticLabel: 'Marcador',
             ),
             onPressed: () {
-              _pdfViewerKey.currentState?.openBookmarkView();
+              GetPlatform.isAndroid ? controller.downloadPdf(
+                  url: pdf, fileName: id):null;
             },
           ),
           GetPlatform.isWeb
@@ -51,7 +57,7 @@ class PdfViewPage extends GetView<PdfViewerControllerUi> {
               semanticLabel: '+ zoom',
             ),
             onPressed: () {
-              _pdfViewerController.zoomLevel = 3;
+              _pdfViewerController.zoomLevel = 1.5;
             },
           )
               : Container(),
@@ -63,7 +69,7 @@ class PdfViewPage extends GetView<PdfViewerControllerUi> {
               semanticLabel: '- zoom',
             ),
             onPressed: () {
-              _pdfViewerController.zoomLevel = 0;
+              _pdfViewerController.zoomLevel = controller.setZoomInPc();
             },
           )
               : Container(),
@@ -74,7 +80,9 @@ class PdfViewPage extends GetView<PdfViewerControllerUi> {
             ? Stack(
           children: [
             SfPdfViewer.network(
+
               pdf,
+              controller: _pdfViewerController,
               key: _pdfViewerKey,
               password: controller.password.value,
               enableTextSelection: false,
@@ -101,7 +109,8 @@ class PdfViewPage extends GetView<PdfViewerControllerUi> {
                   return Text(
                     controller.userCpf.value,
                     style: TextStyle(
-                      fontSize:GetPlatform.isMobile? Get.width * 0.10: Get.width * 0.082,
+                      fontSize: GetPlatform.isMobile ? Get.width * 0.10 : Get
+                          .width * 0.078,
                       color: Colors.black.withOpacity(0.2),
                     ),
                   );
@@ -110,29 +119,47 @@ class PdfViewPage extends GetView<PdfViewerControllerUi> {
             ),
           ],
         )
-            : SfPdfViewer.network(
-          pdf,
-          key: _pdfViewerKey,
-          enableTextSelection: false,
-          password: controller.password.value,
-          onDocumentLoaded: (doc) {
-            trace.putAttribute(
-                'plataforma', controller.userDiviceType.value);
-            trace.putAttribute('userId', controller.userID.value);
-
-            stopTrace();
-          },
-          onDocumentLoadFailed: (doc) {
-            trace.putAttribute(
-                'plataforma', controller.userDiviceType.value);
-            trace.putAttribute('userId', controller.userID.value);
-            trace.putAttribute('error', doc.error);
-            stopTrace();
-          },
-        ),
+            :_detectPdf(pdf: pdf),
       ),
     );
+
   }
+  SfPdfViewer _detectPdf({required  String pdf}){
+    developer.log("${controller.pdfIsSynced.value}",name: "Ta off:?");
+    if(controller.pdfIsSynced.value){
+      return SfPdfViewer.file(
+          File('/storage/emulated/0/Android/data/br.com.escolaalmeidasantos.easmaterialdidatico/files/off/1nLq5aCzQ0ez6fab1nZ5M.pdf'),
+        onDocumentLoadFailed: (e){
+          developer.log(e.error,error: "Erro Estranho");
+        },
+
+
+      );
+    } else{
+      return SfPdfViewer.network(
+        pdf,
+        key: _pdfViewerKey,
+        controller: _pdfViewerController,
+        enableTextSelection: false,
+        password: controller.password.value,
+        onDocumentLoaded: (doc) {
+          trace.putAttribute(
+              'plataforma', controller.userDiviceType.value);
+          trace.putAttribute('userId', controller.userID.value);
+
+          stopTrace();
+        },
+        onDocumentLoadFailed: (doc) {
+          trace.putAttribute(
+              'plataforma', controller.userDiviceType.value);
+          trace.putAttribute('userId', controller.userID.value);
+          trace.putAttribute('error', doc.error);
+          stopTrace();
+        },
+      );
+    }
+  }
+
 
   Future<void> startTrace() async {
     await trace.start();
