@@ -6,33 +6,36 @@ import 'package:firebase_performance/firebase_performance.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
-import 'dart:developer' as developer;
+
 
 class PdfViewPage extends GetView<PdfViewerControllerUi> {
+
   final GlobalKey<SfPdfViewerState> _pdfViewerKey = GlobalKey();
   final PdfViewerController _pdfViewerController = PdfViewerController();
 
-  FirebasePerformance performance = FirebasePerformance.instance;
+  final FirebasePerformance performance = FirebasePerformance.instance;
 
   final data = Get.parameters;
 
   PdfViewPage({Key? key}) : super(key: key);
-  late Trace trace;
+  late final Trace trace;
 
   @override
   Widget build(BuildContext context) {
     String disciplina = data["nome"] ?? "error";
+    String offlinePath=data["path"]??"not";
     String id = data["id"] ?? "error";
     String pdf = data["linkPdf"] ??
         "https://firebasestorage.googleapis.com/v0/b/cefops.appspot.com/o/Logo%20Azul%20PDF.pdf?alt=media&token=92d52776-2235-4b7e-a2fa-6fe9e33b0bb1";
     trace = performance.newTrace('PDF Load time');
     trace.putAttribute('disciplina', disciplina);
 
+controller.startTrace(trace);
     if (!GetPlatform.isWeb) {
       controller.disableScreenCapture();
+
     }
 
-    startTrace();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.blue,
@@ -80,25 +83,26 @@ class PdfViewPage extends GetView<PdfViewerControllerUi> {
             ? Stack(
           children: [
             SfPdfViewer.network(
-
               pdf,
               controller: _pdfViewerController,
               key: _pdfViewerKey,
               password: controller.password.value,
               enableTextSelection: false,
-              onDocumentLoaded: (doc) {
+              onDocumentLoaded: (doc) async{
                 trace.putAttribute(
                     'plataforma', controller.userDiviceType.value);
                 trace.putAttribute('userId', controller.userID.value);
 
-                stopTrace();
+                await controller.stopTrace(trace);
+
               },
-              onDocumentLoadFailed: (doc) {
+              onDocumentLoadFailed: (doc)async {
                 trace.putAttribute(
                     'plataforma', controller.userDiviceType.value);
                 trace.putAttribute('userId', controller.userID.value);
                 trace.putAttribute('error', doc.error);
-                stopTrace();
+                await controller.stopTrace(trace);
+
               },
               initialZoomLevel: controller.setZoomInPc(),
             ),
@@ -119,53 +123,50 @@ class PdfViewPage extends GetView<PdfViewerControllerUi> {
             ),
           ],
         )
-            :_detectPdf(pdf: pdf),
+            :_detectPdf(pdfOn: pdf,pdfOff: offlinePath),
       ),
     );
 
   }
-  SfPdfViewer _detectPdf({required  String pdf}){
-    developer.log("${controller.pdfIsSynced.value}",name: "Ta off:?");
-    if(controller.pdfIsSynced.value){
+  SfPdfViewer _detectPdf({required  String pdfOn,required String pdfOff}){
+    if(pdfOff !="not"){
       return SfPdfViewer.file(
-          File('/storage/emulated/0/Android/data/br.com.escolaalmeidasantos.easmaterialdidatico/files/off/1nLq5aCzQ0ez6fab1nZ5M.pdf'),
-        onDocumentLoadFailed: (e){
-          developer.log(e.error,error: "Erro Estranho");
+          File(pdfOff),onDocumentLoaded: (e)async{
+        await controller.stopTrace(trace);
+
+
+      },
+        onDocumentLoadFailed: (e)async{
+            await controller.stopTrace(trace);
+
         },
 
 
       );
     } else{
       return SfPdfViewer.network(
-        pdf,
+        pdfOn,
         key: _pdfViewerKey,
         controller: _pdfViewerController,
         enableTextSelection: false,
         password: controller.password.value,
-        onDocumentLoaded: (doc) {
+        onDocumentLoaded: (doc) async{
           trace.putAttribute(
               'plataforma', controller.userDiviceType.value);
           trace.putAttribute('userId', controller.userID.value);
 
-          stopTrace();
+          await controller.stopTrace(trace);
         },
-        onDocumentLoadFailed: (doc) {
+        onDocumentLoadFailed: (doc) async {
           trace.putAttribute(
               'plataforma', controller.userDiviceType.value);
           trace.putAttribute('userId', controller.userID.value);
           trace.putAttribute('error', doc.error);
-          stopTrace();
+          await controller.stopTrace(trace);
+
         },
       );
     }
   }
 
-
-  Future<void> startTrace() async {
-    await trace.start();
-  }
-
-  Future<void> stopTrace() async {
-    await trace.stop();
-  }
 }

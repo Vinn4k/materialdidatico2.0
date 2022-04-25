@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_performance/firebase_performance.dart';
 import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:get/get.dart';
 
@@ -31,7 +32,7 @@ class PdfViewerControllerUi extends GetxController{
    await getUserInfo();
     await setDevice();
 
-await analytics.setUserId(id: user!.uid);
+    await analytics.setUserId(id: user!.uid);
     super.onInit();
   }
 
@@ -43,6 +44,7 @@ await analytics.setUserId(id: user!.uid);
   RxString password="O2!iGi%IL6H6Ob0yByjK".obs;
   RxBool pdfIsSynced=false.obs;
   RxString offFilePath="".obs;
+
 
   Future<DocumentSnapshot> getUserInfo() async {
     User? user = FirebaseAuth.instance.currentUser;
@@ -75,23 +77,38 @@ await analytics.setUserId(id: user!.uid);
   }
 
   }
+  Future<void> automaticDownload()async{
+    if(GetPlatform.isAndroid){
+      String offlinePath=data["path"]??"not";
+      if(offlinePath=="not"){
+        String pdf = data["linkPdf"]??"error";
+        String id = data["id"] ?? "error";
+        downloadPdf(url: pdf, fileName: id);
+      }
+    }
+  }
 Future<void> downloadPdf({required String url,required String fileName})async{
-
-  await _service.getDirectory(url:url,fileName: fileName);
+  await _service.downloadPdf(url:url,fileName: fileName);
 }
+
 Future<bool> pdfIsSync()async{
     String id=data['id']??"ERROR";
-    final isoffline= await _service.pdfIsSync(id: id);
-    pdfIsSynced.value=isoffline;
-    if(isoffline){
+    final isOffline= await _service.pdfIsSync(id: id);
+    pdfIsSynced.value=isOffline;
+    if(isOffline){
       File file=await _service.getOffPdf(id: id);
       offFilePath.value=file.absolute.path;
 
     }
 
-    return isoffline;
+    return isOffline;
 }
-
+  Future<void> startTrace(Trace trace) async {
+    await trace.start();
+  }
+  Future<void> stopTrace(Trace trace) async {
+    await trace.stop();
+  }
 
 
   Future<void> disableScreenCapture() async {
