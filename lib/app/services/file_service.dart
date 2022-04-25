@@ -7,7 +7,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class FileService {
-  Future<Directory?> getDirectory(
+  Future<Directory?> downloadPdf(
       {required String url, required String fileName}) async {
     final targetDir = await getExternalStorageDirectory();
     final targetDirFolder = Directory('${targetDir?.path}/off');
