@@ -1,5 +1,10 @@
 import 'dart:convert';
+import 'dart:isolate';
+import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easmaterialdidatico/app/data/interface/data_itens_interface.dart';
+import 'package:easmaterialdidatico/app/data/interface/user_data_info_interface.dart';
+import 'package:easmaterialdidatico/app/services/user_account_check_service.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
@@ -9,7 +14,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ota_update/ota_update.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:device_info_plus/device_info_plus.dart';
-
 import '../../shared/auth/firebase_auth.dart';
 import '../../shared/themes/app_colors.dart';
 import '../data/model/home_pop_show_widget_model.dart';
@@ -19,11 +23,11 @@ import '../data/repository/data_itens_repository.dart';
 import '../data/repository/user_data_info_repository.dart';
 import '../routes/app_routes.dart';
 import '../security/encrypt_service.dart';
-import '../widgets/home_pop_show.dart';
+import '../widgets/home_pop_show_widget.dart';
 
 class HomeController extends GetxController {
-  final DataItensRepository _repository = DataItensRepository();
-  final UserDataInfoRepository _dataUserInfo = UserDataInfoRepository();
+  final IDataItens _repository = DataItensRepository();
+  final IUserDataInfo _dataUserInfo = UserDataInfoRepository();
   late PackageInfo packageInfo;
 
   final FirebaseAnalytics _analytics = FirebaseAnalytics.instance;
@@ -34,6 +38,7 @@ class HomeController extends GetxController {
 
   @override
   Future<void> onInit() async {
+
     packageInfo = await PackageInfo.fromPlatform();
     appVersionLocal = packageInfo.version;
     await userCheck();
@@ -50,12 +55,15 @@ class HomeController extends GetxController {
       await getCourseID();
       await _analytics.setUserId(id: user.uid);
       await _fetchSettingsRemoteForAds();
+      UserAccountCheckService(firebaseAuth: FirebaseAuth.instance).chekIsAccountActive();
+      // GroupSelectPopShowWidget().showDialog();
     }
   }
 
+
   RxList userCourseId = [].obs;
   RxBool showAdds = true.obs;
-  RxString appVerionSever = "1.1.3".obs;
+  RxString appVerisonSever = "1.1.3".obs;
   RxBool updateApp = false.obs;
   RxDouble downloadProgress = 0.0.obs;
   RxString linkApk="".obs;
@@ -83,7 +91,7 @@ class HomeController extends GetxController {
     String email = dataModel.email ?? "";
     String password = dataModel.password ?? "";
     try {
-      await AuthenticationHelper().signIn(email: email, password: password);
+      await AuthenticationHelper(auth: FirebaseAuth.instance).signIn(email: email, password: password);
     } catch (error) {
       final prefs = await SharedPreferences.getInstance();
       prefs.remove("data001");
@@ -98,18 +106,22 @@ class HomeController extends GetxController {
       if (localData != null) {
         await reAuth();
       } else {
-        Get.offAndToNamed(Routes.INITIAL);
+        Get.offAndToNamed(Routes.LOGIN);
+
+
       }
     }
   }
 
   Future<void> logout() async {
-    AuthenticationHelper().signOut().then((value) async {
+
+   await AuthenticationHelper(auth: FirebaseAuth.instance).signOut();
       final prefs = await SharedPreferences.getInstance();
       await prefs.remove("data001");
-      Get.offAndToNamed(Routes.INITIAL);
-      dispose();
-    });
+    dispose();
+      Get.offAndToNamed(Routes.LOGIN);
+
+
   }
 
   Future<void> _fetchSettingsRemoteForAds() async {
@@ -140,9 +152,9 @@ class HomeController extends GetxController {
   Future<void> versionCheck() async {
     _monitorRepository.getApInfo().then(
       (value) {
-        appVerionSever.value = value.get("versao");
+        appVerisonSever.value = value.get("versao");
 
-        if (appVersionLocal != appVerionSever.value) {
+        if (appVersionLocal != appVerisonSever.value) {
           set32or64BitApk(value);
           if (!GetPlatform.isWeb) {
             showAdds.value=false;
@@ -247,5 +259,10 @@ List arm64=deviceData["supported64BitAbis"];
     } catch (e) {
       throw ("Falha ao atualizar");
     }
+  }
+  @override
+  void onClose() {
+    IsolateNameServer.removePortNameMapping('pdfDownload');
+    super.onClose();
   }
 }

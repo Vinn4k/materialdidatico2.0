@@ -1,7 +1,5 @@
 import 'package:easmaterialdidatico/app/controller/singup_controller.dart';
-import 'package:easmaterialdidatico/app/routes/app_routes.dart';
 import 'package:easmaterialdidatico/app/widgets/form_login_widget.dart';
-import 'package:easmaterialdidatico/shared/auth/firebase_auth.dart';
 import 'package:easmaterialdidatico/shared/themes/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -122,36 +120,7 @@ class SingupPage extends GetView<SingupController> {
                                         emailController.text;
 
                                     if (_formKey.currentState!.validate()) {
-                                      controller.loadingPage.value = true;
-
-                                      await AuthenticationHelper()
-                                          .signUp(
-                                              email: email, password: passowrd)
-                                          .then((result) async {
-                                        if (result == null) {
-                                          await AuthenticationHelper()
-                                              .signIn(
-                                                  email: email,
-                                                  password: passowrd)
-                                              .then(
-                                                (value) async =>
-                                                    await controller.singup(),
-                                              );
-
-                                          controller.loadingPage.value = false;
-
-                                          Get.offAndToNamed(Routes.HOME);
-                                        } else {
-                                          controller.loadingPage.value = false;
-                                          controller
-                                              .setErrorMessagerForSnack(result);
-                                          Get.snackbar(
-                                              "Falha no Cadastro",
-                                              controller
-                                                  .errorMessagerForSnack.value);
-                                        }
-                                      });
-                                      controller.loadingPage.value = false;
+                                    controller.singUp(email: email, passowrd: passowrd);
                                     }
                                   }
                                 : null,

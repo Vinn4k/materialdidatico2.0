@@ -1,5 +1,6 @@
 import 'package:easmaterialdidatico/app/controller/subject_controller.dart';
 import 'package:easmaterialdidatico/app/routes/app_routes.dart';
+import 'package:easmaterialdidatico/app/widgets/all_progress_indicator_widget.dart';
 import 'package:easmaterialdidatico/shared/themes/app_text_stayle.dart';
 import 'package:easmaterialdidatico/shared/themes/app_colors.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -44,10 +45,10 @@ class SubjectPage extends GetView<SubjectController> {
                       ),
                     ),
                     Expanded(
-                      flex:GetPlatform.isMobile ?0:3,
+                      flex: GetPlatform.isMobile ? 0 : 3,
                       child: SizedBox(
                         width: constraints.maxWidth * 0.9,
-                        height: constraints.maxHeight*0.9,
+                        height: constraints.maxHeight * 0.9,
                         child: Center(
                           child: FutureBuilder(
                             future: controller.getSubjects(courseId!, id!),
@@ -55,29 +56,52 @@ class SubjectPage extends GetView<SubjectController> {
                                 AsyncSnapshot<QuerySnapshot> snapshot) {
                               if (snapshot.hasData) {
                                 return ListView.separated(
-                                    itemBuilder: (BuildContext context, int index) {
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
                                       Map<String, String> data = {
-                                        "nome": snapshot.data?.docs[index]["nome"],
+                                        "nome": snapshot.data?.docs[index]
+                                            ["nome"],
                                         "id": snapshot.data?.docs[index]["id"],
                                         "linkPdf": snapshot.data?.docs[index]
                                             ["linkPdf"]
                                       };
                                       return Container(
                                         decoration: BoxDecoration(
-                                            border: Border.all(color: Colors.white),
-                                            borderRadius: BorderRadius.circular(5)),
+                                            border:
+                                                Border.all(color: Colors.white),
+                                            borderRadius:
+                                                BorderRadius.circular(5)),
                                         child: ListTile(
-                                          leading: const Icon(
-                                            Icons.picture_as_pdf,
-                                            color: Colors.white,
+                                          leading: Icon(
+                                            snapshot.data?.docs[index]["ativo"]
+                                                ? Icons.picture_as_pdf
+                                                : Icons.do_disturb_alt_rounded,
+                                            color: snapshot.data?.docs[index]
+                                                    .get("ativo")
+                                                ? Colors.white
+                                                : AppColors.orange,
                                           ),
                                           title: Text(
                                             snapshot.data?.docs[index]["nome"],
-                                            style: AppTextStyle.titleRegularWhite,
+                                            style: snapshot.data?.docs[index]
+                                                    ["ativo"]
+                                                ? AppTextStyle.titleRegularWhite
+                                                : AppTextStyle.titleRegularGrey,
                                           ),
-                                          onTap: () => Get.toNamed(Routes.PDFVIEW,
-                                              parameters: data),
-
+                                          onTap: snapshot.data?.docs[index]
+                                                  ["ativo"]
+                                              ? () async {
+                                          bool isOffline=  await controller.pdfIsSync(id: snapshot.data?.docs[index]["id"]);
+                                          isOffline? data["path"]=controller.offFilePath.value:"not";
+                                                  Get.toNamed(Routes.PDFVIEW,
+                                                      parameters: data);
+                                                }
+                                              : () {
+                                                  Get.snackbar("Aviso",
+                                                      "Disciplina Desabilitada",
+                                                      snackPosition:
+                                                          SnackPosition.BOTTOM);
+                                                },
                                         ),
                                       );
                                     },
@@ -94,12 +118,7 @@ class SubjectPage extends GetView<SubjectController> {
                                   child: Text("Erro"),
                                 );
                               }
-                              return const Center(
-                                child: CircularProgressIndicator(
-                                  backgroundColor: Colors.white,
-                                  color: AppColors.orange,
-                                ),
-                              );
+                              return AllProgressIndicator().circularProgress();
                             },
                           ),
                         ),

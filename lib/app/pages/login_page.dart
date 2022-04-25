@@ -12,7 +12,6 @@ class LoginPage extends GetView<LoginController> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passowrdController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
   LoginPage({Key? key}) : super(key: key);
 
   @override
@@ -25,7 +24,7 @@ class LoginPage extends GetView<LoginController> {
               ? const BoxDecoration()
               : const BoxDecoration(
                   image: DecorationImage(
-                      image: AssetImage("assets/image/brasao.png"),
+                      image: AssetImage('assets/image/brasao.png'),
                       opacity: 0.09,
                       scale: 1,
                       alignment: Alignment.centerRight),
@@ -74,7 +73,7 @@ class LoginPage extends GetView<LoginController> {
     return Container(
       constraints: const BoxConstraints(
         maxWidth: 700,
-        minHeight: 400,
+        minHeight: 300,
       ),
       width: Get.width * 0.9,
       decoration: BoxDecoration(
@@ -88,7 +87,7 @@ class LoginPage extends GetView<LoginController> {
             width: Get.width * 0.55,
             height: Get.height * 0.22,
             child: Image.asset(
-              "assets/image/logov2.png",
+              'assets/image/logov2.png',
             ),
           ),
           Center(
@@ -129,7 +128,9 @@ class LoginPage extends GetView<LoginController> {
                       color: AppColors.orange,
                     )
                   : ElevatedButton(
+
                       onPressed: () async {
+
                         if (_formKey.currentState!.validate()) {
                           controller.loadingPage.value = true;
                           await controller.login(
@@ -166,80 +167,89 @@ class LoginPage extends GetView<LoginController> {
       height: Get.height * 0.75,
       decoration: BoxDecoration(
           color: Colors.white, borderRadius: BorderRadius.circular(15)),
-      child: Column(
-        children: [
-          SizedBox(
-            height: Get.height * 0.01,
-          ),
-          SizedBox(
-            width: Get.width * 0.4,
-            height: Get.height * 0.22,
-            child: Image.asset(
-              "assets/image/logov2.png",
+      child: SizedBox(
+
+        child: Column(
+          children: [
+            SizedBox(
+              height: Get.height * 0.01,
             ),
-          ),
-          Center(
-
-            child: Text(
-              "EAS Material Didático ",
-              style: AppTextStyle.titleRegularBold,
-
-          )),
-          FormLoginWidget(
-              "E-mail", Icons.person, emailController, false, AppColors.blue,TextInputType.emailAddress),
-          FormLoginWidget(
-              "Senha", Icons.lock, passowrdController, true, AppColors.blue,TextInputType.visiblePassword),
-          Row(
-            children: [
-              Expanded(
-                  child: SizedBox(
-                width: Get.width,
-              )),
-              TextButton(
-                onPressed: () {
-                  Get.toNamed(Routes.PASSWORDRESET);
-                },
-                child: const Text(
-                  "Esqueci a senha",
-                  style: TextStyle(color: AppColors.blue),
-                ),
+            SizedBox(
+              width: Get.width * 0.4,
+              height: Get.height * 0.22,
+              child: Image.asset(
+                'assets/image/logov2.png',
               ),
-            ],
-          ),
-          Obx(
-            () {
-              return controller.loadingPage.value
-                  ? const CircularProgressIndicator(
-                      backgroundColor: Colors.white,
-                      color: AppColors.orange,
-                    )
-                  : ElevatedButton(
-                      onPressed: () async {
-                        if (_formKey.currentState!.validate()) {
-                          controller.loadingPage.value = true;
-                          await controller.login(emailController.text, passowrdController.text);
-                          controller.loadingPage.value = false;
-                        }
-                      },
-                      child: const Text(
-                        "Entrar",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all(AppColors.blue),
-                        padding: MaterialStateProperty.all(
-                            EdgeInsets.all(Get.height * 0.02)),
-                        textStyle: MaterialStateProperty.all(
-                          TextStyle(
-                            fontSize: Get.height * 0.02,
+            ),
+            Center(
+
+              child: Text(
+                "EAS Material Didático ",
+                style: AppTextStyle.titleRegularBold,
+
+            )),
+            SizedBox(
+              width: Get.width*0.8,
+              height: Get.height*0.13,
+              child: FormLoginWidget(
+                  "E-mail", Icons.person, emailController, false, AppColors.blue,TextInputType.emailAddress),
+            ),
+            SizedBox(
+              width: Get.width*0.8,
+              height: Get.height*0.13,
+              child: FormLoginWidget(
+                  "Senha", Icons.lock, passowrdController, true, AppColors.blue,TextInputType.visiblePassword),
+            ),
+            Row(
+              children: [
+                Expanded(
+                    child: SizedBox(
+                  width: Get.width,
+                )),
+                TextButton(
+                  onPressed: () {
+                    Get.toNamed(Routes.PASSWORDRESET);
+                  },
+                  child: const Text(
+                    "Esqueci a senha",
+                    style: TextStyle(color: AppColors.blue),
+                  ),
+                ),
+              ],
+            ),
+            Obx(
+              () {
+                return controller.loadingPage.value
+                    ? const CircularProgressIndicator(
+                        backgroundColor: Colors.white,
+                        color: AppColors.orange,
+                      )
+                    : ElevatedButton(
+                        onPressed: () async {
+                          if (_formKey.currentState!.validate()) {
+                            await controller.login(emailController.text, passowrdController.text);
+                          }
+                        },
+                        child: const Text(
+                          "Entrar",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(AppColors.blue),
+                          padding: MaterialStateProperty.all(
+                              EdgeInsets.all(Get.height * 0.02)),
+                          textStyle: MaterialStateProperty.all(
+                            TextStyle(
+                              fontSize: Get.height * 0.02,
+                            ),
                           ),
                         ),
-                      ),
-                    );
-            },
-          ),
-        ],
+                      );
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -1,37 +1,59 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthenticationHelper {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  FirebaseAuth auth;
 
-  get user => _auth.currentUser;
+  AuthenticationHelper({required this.auth});
+
+  get user => auth.currentUser;
 
   //SIGN UP METHOD
   Future signUp({required String email, required String password}) async {
     try {
-      await _auth.createUserWithEmailAndPassword(
-        email: email.replaceAll(' ', ''),
-        password: password.replaceAll(' ', ''),
-
+      final data=  await auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
       );
-      return null;
+      return data;
     } on FirebaseAuthException catch (e) {
       return e.message;
     }
   }
 
-  //SIGN IN METHOD
-  Future signIn({required String email, required String password,}) async {
+
+  Future signIn({
+    required String email,
+    required String password,
+  }) async {
     try {
-      await _auth.signInWithEmailAndPassword(email: email.replaceAll(' ', ''),
-        password: password.replaceAll(' ', ''),);
-      return null;
+      final data = await auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      return data;
     } on FirebaseAuthException catch (e) {
       return e.message;
     }
-  }Future resetPassword({required String email}) async {
+  }
+
+  Future resetPassword({required String email}) async {
     try {
-      await _auth.sendPasswordResetEmail(email: email.replaceAll(' ', ''));
-      return null;
+     await auth.sendPasswordResetEmail(email: email);
+    } on FirebaseAuthException catch (e) {
+      return e.message;
+    }
+  }
+  Future updateEmail({required String email}) async {
+    try {
+      await auth.currentUser?.updateEmail(email);
+
+    } on FirebaseAuthException catch (e) {
+      return e.message;
+    }
+  }  Future sendVerificationEmail() async {
+    try {
+      await auth.currentUser?.sendEmailVerification();
+
     } on FirebaseAuthException catch (e) {
       return e.message;
     }
@@ -39,6 +61,6 @@ class AuthenticationHelper {
 
   //SIGN OUT METHOD
   Future signOut() async {
-    await _auth.signOut();
+  await auth.signOut();
   }
 }

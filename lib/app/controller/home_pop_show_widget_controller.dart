@@ -7,6 +7,7 @@ class HomePopShowWidgetController extends GetxController {
 
 
 
+
   @override
   void onInit() {
     super.onInit();

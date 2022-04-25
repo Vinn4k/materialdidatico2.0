@@ -9,22 +9,15 @@ import '../routes/app_routes.dart';
 import '../security/encrypt_service.dart';
 
 class LoginController extends GetxController {
-  final User? user = FirebaseAuth.instance.currentUser;
-  final FirebaseAnalytics _analytics = FirebaseAnalytics.instance;
-
-
 
   RxBool loadingPage = false.obs;
   RxBool stayConnected = false.obs;
   RxBool showPassord = false.obs;
   RxString errorMessagerForSnack = "".obs;
 
-
   @override
   Future<void> onInit() async {
     super.onInit();
-
-
   }
 
   ///seta a menssagem que sera mostrada no snackbar
@@ -34,36 +27,33 @@ class LoginController extends GetxController {
 
   ///envia o evento de login para o analytics
   Future<void> sendLoginEvent() async {
+    final FirebaseAnalytics _analytics = FirebaseAnalytics.instance;
+
     await _analytics.logLogin(
       loginMethod: "EmailAndPassword",
     );
   }
 
-
-
-
-
-  Future<void> login(String email, String passowrd) async {
-
-    await AuthenticationHelper()
-        .signIn(email: email, password: passowrd)
+  Future<void> login(String emailParam, String passwordParam) async {
+      String email=emailParam.removeAllWhitespace;
+      String password=passwordParam.removeAllWhitespace;
+      loadingPage.value = true;
+      await AuthenticationHelper(auth: FirebaseAuth.instance)
+        .signIn(email: email, password: password)
         .then((result) async {
-      if (result == null) {
-        sendLoginEvent();
-        loadingPage.value = false;
-        EncyptService().
-        encryptAndSave(user: email, password: passowrd);
-        Get.offAndToNamed(Routes.HOME);
-      } else {
-        loadingPage.value = false;
 
-        setErrorMessagerForSnack(result);
-        Get.snackbar("Falha na Autenticação", errorMessagerForSnack.value);
-      }
+        if(result is UserCredential){
+          sendLoginEvent();
+          EncyptService().encryptAndSave(user: email, password: password);
+          loadingPage.value = false;
+          Get.offAndToNamed(Routes.HOME);
+        }else{
+          loadingPage.value = false;
+          setErrorMessagerForSnack(result);
+          Get.snackbar("Falha na Autenticação", errorMessagerForSnack.value);
+        }
+
+
     });
   }
-
-
-
-
 }

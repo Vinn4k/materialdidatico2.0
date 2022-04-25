@@ -35,5 +35,10 @@ class AppTextStyle {
     fontWeight: FontWeight.w600,
     color: Colors.white,
 
+  );static final TextStyle titleRegularGrey = GoogleFonts.openSans(
+    fontSize: 26,
+    fontWeight: FontWeight.w600,
+    color: Colors.grey,
+
   );
 }
