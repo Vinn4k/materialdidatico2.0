@@ -55,7 +55,7 @@ class HomeController extends GetxController {
       await _analytics.setUserId(id: user.uid);
       await _fetchSettingsRemoteForAds();
       UserAccountCheckService(firebaseAuth: FirebaseAuth.instance).chekIsAccountActive();
-      GroupSelectPopShowWidget().showDialog();
+       userGroupVerify();
     }
   }
 
@@ -146,7 +146,24 @@ class HomeController extends GetxController {
       throw ("Falha ao buscar configuração remota");
     }
   }
+Future<void> userGroupVerify()async{
+  User? user = FirebaseAuth.instance.currentUser;
+  String uid = user?.uid ?? "";
+  DocumentSnapshot data = await _dataUserInfo.getUserInfo(uid);
+  try{
+    ///tem que da erro aqui
+    String? groupeId=data.get("turma");
+  }catch(e){
 
+      GroupSelectPopShowWidget().showDialog();
+
+
+  }
+
+
+
+}
+  
   ///mostra popup para atualizar a versão do app
   Future<void> versionCheck() async {
     _monitorRepository.getApInfo().then(

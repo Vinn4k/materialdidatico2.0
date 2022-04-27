@@ -101,14 +101,6 @@ class HomePage extends GetView<HomeController> {
                               AsyncSnapshot<QuerySnapshot> snapshot) {
                             if (snapshot.hasData) {
                               cache = snapshot.data;
-                              for (int i = 0; i <
-                                  snapshot.data!.docs.length; i++) {
-                                DocumentSnapshot doc = snapshot.data!.docs
-                                    .elementAt(i);
-                                print(doc.metadata.isFromCache
-                                    ? "NOT FROM NETWORK"
-                                    : "FROM NETWORK");
-                              }
                               if (snapshot.data?.docs[0]["ativo"] == false) {
                                 return Center(
                                   child: Text(
