@@ -11,7 +11,7 @@ class ActiveAccountController extends GetxController {
   final StreamController<User?> _controller=StreamController();
   late final   StreamSubscription _sub;
   RxString email = "teste@teste.com".obs;
-  RxString message = "Por Favor Clique no botão Verificar".obs;
+  RxString message = "Por Favor Clique no Botão Verificar".obs;
   RxBool loading = false.obs;
 
   @override
@@ -31,7 +31,7 @@ class ActiveAccountController extends GetxController {
     await _authenticationHelper.sendVerificationEmail();
     Get.back();
     loading.value = false;
-    message.value="Por Favor verifique sua caixa de email e spam";
+    message.value="Por favor verifique sua caixa de email e spam";
  final Stream  userReloadCheck =
     Stream.periodic(const Duration(seconds: 5), (int nd) {
       return nd;
