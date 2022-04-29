@@ -1,11 +1,11 @@
-import 'package:easmaterialdidatico/app/controller/singup_controller.dart';
+import 'package:easmaterialdidatico/app/controller/sing_up_controller.dart';
 import 'package:easmaterialdidatico/app/widgets/form_login_widget.dart';
 import 'package:easmaterialdidatico/shared/themes/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class SingupPage extends GetView<SingupController> {
+class SingupPage extends GetView<SingUpController> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passowrdController = TextEditingController();
   final TextEditingController passowrd2Controller = TextEditingController();
@@ -120,7 +120,7 @@ class SingupPage extends GetView<SingupController> {
                                         emailController.text;
 
                                     if (_formKey.currentState!.validate()) {
-                                    controller.singUp(email: email, passowrd: passowrd);
+                                    controller.singUp(email: email, password: passowrd);
                                     }
                                   }
                                 : null,

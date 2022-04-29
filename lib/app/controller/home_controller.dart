@@ -37,7 +37,6 @@ class HomeController extends GetxController {
 
   @override
   Future<void> onInit() async {
-
     packageInfo = await PackageInfo.fromPlatform();
     appVersionLocal = packageInfo.version;
     await userCheck();

@@ -47,6 +47,8 @@ class PdfViewPage extends GetView<PdfViewerControllerUi> {
                   ),
                   onPressed: () {
                     _pdfViewerController.zoomLevel = 1.5;
+
+
                   },
                 )
               : Container(),
@@ -55,7 +57,7 @@ class PdfViewPage extends GetView<PdfViewerControllerUi> {
                   icon: const Icon(
                     Icons.download,
                     color: Colors.white,
-                    semanticLabel: 'Marcador',
+                    semanticLabel: 'Download',
                   ),
                   onPressed: () {
                     GetPlatform.isAndroid
@@ -63,7 +65,7 @@ class PdfViewPage extends GetView<PdfViewerControllerUi> {
                         : null;
                   },
                 )
-              : SizedBox(),
+              : const SizedBox(),
           GetPlatform.isWeb
               ? IconButton(
                   icon: const Icon(
