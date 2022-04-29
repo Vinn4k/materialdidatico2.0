@@ -12,12 +12,10 @@ import 'package:get/get.dart';
 import '../../shared/auth/firebase_auth.dart';
 import '../routes/app_routes.dart';
 
-
-
 class SingUpController extends GetxController {
   final SingUpRepository repository = SingUpRepository();
   final CourseRepository _courseRepository = CourseRepository();
-  final IUserDataInfo _userDataInfo=UserDataInfoRepository();
+  final IUserDataInfo _userDataInfo = UserDataInfoRepository();
   final courseId = Get.parameters;
 
   @override
@@ -45,16 +43,18 @@ class SingUpController extends GetxController {
       courseName.value = snapshot.get("nome");
       courseIdForSingUp.value = snapshot.get("id");
       moduleIdForSingUp.value = snapshot.get("firstModule");
-      buttonEnabled.value=snapshot.get("receberCadastro");
-      if(snapshot.get("receberCadastro")==false){
-       Get.showSnackbar(const GetSnackBar(
-         title: "Curso Desabilitado Para Cadastro",
-         message: "Por favor entre em contato com 2745-2390",
-         snackPosition: SnackPosition.TOP,
-         icon: Icon(Icons.error_outline,color: AppColors.orange,),
-       ));
+      buttonEnabled.value = snapshot.get("receberCadastro");
+      if (snapshot.get("receberCadastro") == false) {
+        Get.showSnackbar(const GetSnackBar(
+          title: "Curso Desabilitado Para Cadastro",
+          message: "Por favor entre em contato com 2745-2390",
+          snackPosition: SnackPosition.TOP,
+          icon: Icon(
+            Icons.error_outline,
+            color: AppColors.orange,
+          ),
+        ));
       }
-
     } else {
       courseName.value = "Curso não Encontrado";
       buttonEnabled.value = false;
@@ -65,42 +65,34 @@ class SingUpController extends GetxController {
     errorMessengerForSnack.value = AuthHanddler().errorFilter(error);
   }
 
-  Future<void> singUp({required String email,required String password}) async {
-    loadingPage.value=true;
-    String cpf0= cpf.value.replaceAll(".", "");
-    String cpfFormatted=cpf0.removeAllWhitespace.replaceAll("-", "");
-    bool userExist=await _userDataInfo.checkUserExist(cpfFormatted);
+  Future<void> singUp({required String email, required String password}) async {
+    loadingPage.value = true;
+    String cpf0 = cpf.value.replaceAll(".", "");
+    String cpfFormatted = cpf0.removeAllWhitespace.replaceAll("-", "");
+    bool userExist = await _userDataInfo.checkUserExist(cpfFormatted);
 
-    userExist? Get.snackbar("Erro", "CPF já Cadastrado",colorText: Colors.red):await AuthenticationHelper(auth: FirebaseAuth.instance)
-        .signUp(
-        email: email, password: password)
-        .then((result) async {
-      if (result is UserCredential) {
-        await AuthenticationHelper(auth: FirebaseAuth.instance)
-            .signIn(
-            email: email,
-            password: password)
-            .then(
-                (value) async {
-              User? user = FirebaseAuth.instance.currentUser;
-              String uid = user!.uid;
-              await repository.singUp(name.value,cpfFormatted, email, uid,
-                  courseIdForSingUp.value, moduleIdForSingUp.value);}
-        );
-        loadingPage.value = false;
-        Get.offAndToNamed(Routes.HOME);
-      } else {
-        loadingPage.value = false;
-        setErrorMessengerForSnack(result);
-        Get.snackbar(
-            "Falha no Cadastro",
-            errorMessengerForSnack.value);
-      }
-    });
+    userExist
+        ? Get.snackbar("Erro", "CPF já Cadastrado", colorText: Colors.red)
+        : await AuthenticationHelper(auth: FirebaseAuth.instance)
+            .signUp(email: email, password: password)
+            .then((result) async {
+            if (result is UserCredential) {
+              await AuthenticationHelper(auth: FirebaseAuth.instance)
+                  .signIn(email: email, password: password)
+                  .then((value) async {
+                User? user = FirebaseAuth.instance.currentUser;
+                String uid = user!.uid;
+                await repository.singUp(name.value, cpfFormatted, email, uid,
+                    courseIdForSingUp.value, moduleIdForSingUp.value);
+              });
+              loadingPage.value = false;
+              Get.offAndToNamed(Routes.HOME);
+            } else {
+              loadingPage.value = false;
+              setErrorMessengerForSnack(result);
+              Get.snackbar("Falha no Cadastro", errorMessengerForSnack.value);
+            }
+          });
     loadingPage.value = false;
-
-
-
-
   }
 }
