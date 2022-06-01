@@ -16,7 +16,7 @@ class HomePopShowWidget {
   showDialog({required HomePopShowWidgetModel data}) {
     return Get.defaultDialog(
       barrierDismissible: false,
-      title: "Cursos Livres",
+      title: "${data.tituloPop}",
       content: Column(
         children: [
            Image(
@@ -32,28 +32,18 @@ class HomePopShowWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(
+                width:
+                    GetPlatform.isMobile ? Get.width * 0.5 : Get.width * 0.175,
                 child: ElevatedButton(
                   onPressed: () async{
                    await controller.courSelect(
                         courseName: "${data.curso}",
                         status: "open");
-                    launch("${data.paginaMatricula}");
+                    launchUrl(Uri.parse("${data.paginaMatricula}"));
                     controller.dispose();
                     Get.back();
 
                   },
-                  child: SizedBox(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: const [
-                        Icon(
-                          Icons.ads_click,
-                          color: AppColors.orange,
-                        ),
-                        Text("Mais Informações")
-                      ],
-                    ),
-                  ),
                   style: ButtonStyle(
                       backgroundColor:
                           MaterialStateProperty.all(AppColors.blue),
@@ -61,9 +51,19 @@ class HomePopShowWidget {
                           MaterialStateProperty.all(const EdgeInsets.all(10)),
                       textStyle: MaterialStateProperty.all(
                           const TextStyle(fontSize: 15))),
+                  child: SizedBox(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children:  [
+                       const Icon(
+                          Icons.ads_click,
+                          color: AppColors.orange,
+                        ),
+                        Text("${data.tituloBotao}")
+                      ],
+                    ),
+                  ),
                 ),
-                width:
-                    GetPlatform.isMobile ? Get.width * 0.5 : Get.width * 0.175,
               ),
               Obx(
                 () {
