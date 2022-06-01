@@ -11,6 +11,12 @@ class StudentGroupProvider {
     return snapshot;
   }
 
+  Future<DocumentSnapshot> getGroupInfoById(String id) async {
+    DocumentSnapshot snapshot = await FirebaseFirestore.instance
+        .collection("turmas").doc(id)
+        .get();
+    return snapshot;
+  }
   Future<void> setUserGroup(
       {required String id, required String groupId}) async {
     await FirebaseFirestore.instance

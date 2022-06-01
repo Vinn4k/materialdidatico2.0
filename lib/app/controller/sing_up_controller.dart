@@ -72,7 +72,8 @@ class SingUpController extends GetxController {
     bool userExist = await _userDataInfo.checkUserExist(cpfFormatted);
 
     userExist
-        ? Get.snackbar("Erro", "CPF já Cadastrado", colorText: Colors.red)
+        ?await showMessageAndDeleteAccount(email,password)
+
         : await AuthenticationHelper(auth: FirebaseAuth.instance)
             .signUp(email: email, password: password)
             .then((result) async {
@@ -94,5 +95,12 @@ class SingUpController extends GetxController {
             }
           });
     loadingPage.value = false;
+  }
+  Future<void> showMessageAndDeleteAccount(String email,String password)async{
+    Get.snackbar("Erro", "CPF já Cadastrado", colorText: Colors.red);
+    await AuthenticationHelper(auth: FirebaseAuth.instance)
+        .signUp(email: email, password: password);
+    User? user = FirebaseAuth.instance.currentUser;
+    await user!.delete();
   }
 }

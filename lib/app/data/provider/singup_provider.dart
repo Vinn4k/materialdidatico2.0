@@ -11,7 +11,7 @@ class SingupProvider{
         'email':email,
         'uid':uid,
         "cursos": [{"ativo": true, "cursoId": id}],
-        "modulos": [{"modulo": module, "ativo": true}],
+
       }
     );
 
