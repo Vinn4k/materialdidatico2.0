@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 import '../../shared/themes/app_colors.dart';
 import '../../shared/themes/app_text_stayle.dart';
 import '../controller/module_controller.dart';
-import '../routes/app_routes.dart';
 
 class ModulePage extends GetView<ModuleController> {
   final curso = Get.parameters;
@@ -109,13 +108,13 @@ class ModulePage extends GetView<ModuleController> {
                         border: Border.all(color: Colors.white),
                         borderRadius: BorderRadius.circular(5)),
                     child: ListTile(
-                      leading:  Icon(
+                      leading: Icon(
                         snapshot.data?.docs[index].get("ativo")
-                            ?Icons.attach_file:
-                        Icons.do_disturb_alt_rounded,
+                            ? Icons.attach_file
+                            : Icons.do_disturb_alt_rounded,
                         color: snapshot.data?.docs[index].get("ativo")
-                            ? Colors.white:
-                       AppColors.orange,
+                            ? Colors.white
+                            : AppColors.orange,
                       ),
                       title: Text(
                         snapshot.data?.docs[index]["nome"],
@@ -125,22 +124,13 @@ class ModulePage extends GetView<ModuleController> {
                       ),
                       onTap: snapshot.data?.docs[index].get("ativo")
                           ? () {
-                              if (controller.userModule
-                                  .where((item) => item["modulo"] == data["id"])
-                                  .isNotEmpty) {
-                                Get.toNamed(Routes.SUBJECT, parameters: data);
-                              } else {
-                                Get.snackbar(
-                                    "Aviso", "Você não está inscrito neste módulo",
-                                    snackStyle: SnackStyle.FLOATING,
-                                    snackPosition: SnackPosition.BOTTOM);
-                              }
+
+                                controller.moduleVerifyAndNavigate(data: data);
                             }
-                          : (){
-                        Get.snackbar(
-                            "Aviso", "Módulo Desabilitado",
-                            snackPosition: SnackPosition.BOTTOM);
-                      },
+                          : () {
+                              Get.snackbar("Aviso", "Módulo Desabilitado",
+                                  snackPosition: SnackPosition.BOTTOM);
+                            },
                     ),
                   );
                 },

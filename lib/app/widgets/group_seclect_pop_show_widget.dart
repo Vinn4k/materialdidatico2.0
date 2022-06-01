@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easmaterialdidatico/app/controller/student_group_select_controller.dart';
 import 'package:easmaterialdidatico/app/widgets/all_progress_indicator_widget.dart';
@@ -18,15 +17,15 @@ class GroupSelectPopShowWidget {
       content: Column(
         children: [
           SizedBox(
-            height: Get.height * 0.09,
-            width: Get.height * 0.2,
+            height: Get.height * 0.14,
+            width: Get.height * 0.3,
             child: listGenerate(),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               IconButton(
-                  onPressed: () async{
+                  onPressed: () async {
                     await _controller.setStudentGroup();
                   },
                   icon: const Icon(
@@ -34,7 +33,7 @@ class GroupSelectPopShowWidget {
                     color: Colors.green,
                   )),
               IconButton(
-                  onPressed: () => Get.back(),
+                  onPressed: () => null,
                   icon: const Icon(
                     Icons.close,
                     color: Colors.red,
@@ -51,29 +50,34 @@ class GroupSelectPopShowWidget {
       stream: _controller.getGroup().asStream(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasData) {
-          return ListView.builder(
-            itemCount: snapshot.data?.size,
-            itemBuilder: (BuildContext context, int index) {
-              return SizedBox(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Text("Turma ${snapshot.data?.docs[index].get("nome")}"),
-                    Obx(() {
-                      return IconButton(
-                        icon: _controller.selectedIndex.value == index
-                            ? const Icon(Icons.check_circle)
-                            : const Icon(Icons.circle_outlined),
-                        onPressed: () {
-                          _controller.selectedIndex.value = index;
-                          _controller.getSelectedGroup(snapshot.data!.docs[index]);
-                        },
-                      );
-                    })
-                  ],
-                ),
-              );
-            },
+          return Scrollbar(
+            isAlwaysShown: true,
+
+            child: ListView.builder(
+              itemCount: snapshot.data?.size,
+              itemBuilder: (BuildContext context, int index) {
+                return SizedBox(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Text("Turma ${snapshot.data?.docs[index].get("nome")}"),
+                      Obx(() {
+                        return IconButton(
+                          icon: _controller.selectedIndex.value == index
+                              ? const Icon(Icons.check_circle)
+                              : const Icon(Icons.circle_outlined),
+                          onPressed: () {
+                            _controller.selectedIndex.value = index;
+                            _controller
+                                .getSelectedGroup(snapshot.data!.docs[index]);
+                          },
+                        );
+                      })
+                    ],
+                  ),
+                );
+              },
+            ),
           );
         } else {
           return AllProgressIndicator().circularProgress();

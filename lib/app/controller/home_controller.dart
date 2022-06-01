@@ -37,7 +37,6 @@ class HomeController extends GetxController {
 
   @override
   Future<void> onInit() async {
-
     packageInfo = await PackageInfo.fromPlatform();
     appVersionLocal = packageInfo.version;
     await userCheck();
@@ -271,7 +270,6 @@ List arm64=deviceData["supported64BitAbis"];
           downloadProgress.value = double.parse(event.value ?? "");
         },
       );
-      // ignore: avoid_catches_without_on_clauses
     } catch (e) {
       throw ("Falha ao atualizar");
     }

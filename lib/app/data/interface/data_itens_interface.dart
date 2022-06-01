@@ -15,8 +15,4 @@ abstract class IDataItens{
   Future<String> putCourses (ItensModel data);
   Future<String> putModules (ItensModel data);
 
-
-
-
-
 }

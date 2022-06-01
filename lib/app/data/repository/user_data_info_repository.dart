@@ -10,4 +10,9 @@ class UserDataInfoRepository implements IUserDataInfo{
   Future<DocumentSnapshot> getUserInfo(String uid) {
    return provider.getUserInfo(uid);
   }
+
+  @override
+  Future<bool> checkUserExist(String cpf) {
+    return provider.checkUserExist(cpf);
+  }
 }

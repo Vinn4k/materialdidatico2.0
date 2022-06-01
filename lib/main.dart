@@ -27,6 +27,7 @@ class MyApp extends StatelessWidget {
 
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
+      title: "EAS Material Didático",
       initialRoute: Routes.INITIAL,
       getPages: AppPages.routes,
       navigatorObservers: [

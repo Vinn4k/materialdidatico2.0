@@ -119,10 +119,13 @@ class HomePage extends GetView<HomeController> {
                                       "id": snapshot.data?.docs[index]["id"],
 
                                     };
-                                    return courseWidget(
-                                        snapshot.data?.docs[index]["nome"],
-                                        snapshot.data?.docs[index]["ativo"],
-                                        data, controller);
+                                    if(snapshot.data?.docs[index]["nome"]!= "manutenção"){
+                                      return  courseWidget(
+                                          snapshot.data?.docs[index]["nome"],
+                                          snapshot.data?.docs[index]["ativo"],
+                                          data, controller);
+                                    }
+                                    return const SizedBox();
                                   },
                                   separatorBuilder:
                                       (BuildContext context, int index) {

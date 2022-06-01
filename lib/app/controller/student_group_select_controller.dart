@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easmaterialdidatico/app/data/interface/user_data_info_interface.dart';
 import 'package:easmaterialdidatico/app/data/repository/student_group_repository.dart';
 import 'package:easmaterialdidatico/app/data/repository/user_data_info_repository.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 
@@ -9,9 +10,10 @@ class GroupSelectController extends GetxController {
 
   final StudentGroupRepository _repository = StudentGroupRepository();
    final IUserDataInfo _dataUserInfo = UserDataInfoRepository();
+  final FirebaseAnalytics _analytics = FirebaseAnalytics.instance;
 
 
-  RxInt selectedIndex = 1.obs;
+  RxInt selectedIndex = 10.obs;
   RxString selectedGroupId = "nd".obs;
   RxString userCourseId="".obs;
 
@@ -36,6 +38,7 @@ class GroupSelectController extends GetxController {
     String uid = user?.uid ?? "";
     if (selectedGroupId.value != "nd") {
          await _repository.setUserGroup(id: uid, groupId: selectedGroupId.value);
+         await _analytics.logJoinGroup(groupId: selectedGroupId.value);
          Get.back();
     } else {
       Get.showSnackbar(const GetSnackBar(

@@ -7,6 +7,9 @@ class StudentGroupRepository {
   Future<QuerySnapshot> getCourseInfoById(String id) async {
     return _provider.getCourseInfoById(id);
   }
+  Future<DocumentSnapshot> getGroupById(String id) async {
+    return _provider.getGroupInfoById(id);
+  }
 
   Future<void> setUserGroup(
       {required String id, required String groupId}) async {

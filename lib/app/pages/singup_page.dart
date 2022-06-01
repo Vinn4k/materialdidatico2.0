@@ -1,11 +1,11 @@
-import 'package:easmaterialdidatico/app/controller/singup_controller.dart';
+import 'package:easmaterialdidatico/app/controller/sing_up_controller.dart';
 import 'package:easmaterialdidatico/app/widgets/form_login_widget.dart';
 import 'package:easmaterialdidatico/shared/themes/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class SingupPage extends GetView<SingupController> {
+class SingupPage extends GetView<SingUpController> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passowrdController = TextEditingController();
   final TextEditingController passowrd2Controller = TextEditingController();
@@ -17,16 +17,16 @@ class SingupPage extends GetView<SingupController> {
 
   @override
   Widget build(BuildContext context) {
-    double widethForPC = Get.width;
+    double widthForPC = Get.width;
     if (Get.width >= 600) {
-      widethForPC = Get.width * 0.5;
+      widthForPC = Get.width * 0.5;
     }
     return Scaffold(
       backgroundColor: AppColors.blue,
 
       body: Center(
         child: Container(
-          width: widethForPC,
+          width: widthForPC,
           height: Get.height * 0.85,
           decoration: BoxDecoration(
               color: GetPlatform.isMobile ? AppColors.blue : Colors.white,
@@ -69,7 +69,7 @@ class SingupPage extends GetView<SingupController> {
                   },
                 ),
                 SizedBox(
-                  width: widethForPC,
+                  width: widthForPC,
                   child: Form(
                     key: _formKey,
                     child: Column(
@@ -97,7 +97,7 @@ class SingupPage extends GetView<SingupController> {
                             Icons.lock,
                             passowrdController,
                             true,
-                            GetPlatform.isMobile ? Colors.white : Colors.black,TextInputType.visiblePassword),
+                            GetPlatform.isMobile ? Colors.white : Colors.black,TextInputType.visiblePassword,),
                       ],
                     ),
                   ),
@@ -113,14 +113,14 @@ class SingupPage extends GetView<SingupController> {
                             onPressed: controller.buttonEnabled.value
                                 ? () async {
                                     String email = emailController.text;
-                                    String passowrd = passowrdController.text;
+                                    String password = passowrdController.text;
                                     controller.name.value = nomeController.text;
                                     controller.cpf.value = cpfController.text;
                                     controller.email.value =
                                         emailController.text;
 
                                     if (_formKey.currentState!.validate()) {
-                                    controller.singUp(email: email, passowrd: passowrd);
+                                    controller.singUp(email: email, password: password);
                                     }
                                   }
                                 : null,

@@ -1,6 +1,4 @@
-import 'package:easmaterialdidatico/app/bindings/adm_binding.dart';
 import 'package:easmaterialdidatico/app/bindings/singup_bindings.dart';
-import 'package:easmaterialdidatico/app/pages/adm_page.dart';
 import 'package:easmaterialdidatico/app/pages/singup_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -29,7 +27,7 @@ class AppPages {
     GetPage(
         name: Routes.INITIAL,
         page: () => _homeInitialChange(),
-        transition: Transition.circularReveal,
+        transition: Transition.noTransition,
         binding: _homeInitialChangeBinding()),
     GetPage(
         name: Routes.LOGIN, page: () => LoginPage(), binding: LoginBinding()),
