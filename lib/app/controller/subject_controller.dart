@@ -36,8 +36,8 @@ class SubjectController extends GetxController{
   Future<bool> pdfIsSync({required String id})async{
     final offline= await _service.pdfIsSync(id: id);
     if(offline){
-      File file=await _service.getOffPdf(id: id);
-      offFilePath.value=file.absolute.path;
+      String base64Pdf=await _service.getOffPdf(id: id);
+      offFilePath.value=base64Pdf;
 
     }
 
