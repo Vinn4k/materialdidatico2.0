@@ -43,7 +43,7 @@ class PdfViewerControllerUi extends GetxController{
   RxString userDiviceType="".obs;
   RxString password="O2!iGi%IL6H6Ob0yByjK".obs;
   RxBool pdfIsSynced=false.obs;
-  RxString offFilePath="".obs;
+  RxString offPdfBase64="".obs;
 
 
   Future<DocumentSnapshot> getUserInfo() async {
@@ -96,8 +96,8 @@ Future<bool> pdfIsSync()async{
     final isOffline= await _service.pdfIsSync(id: id);
     pdfIsSynced.value=isOffline;
     if(isOffline){
-      File file=await _service.getOffPdf(id: id);
-      offFilePath.value=file.absolute.path;
+      String base64Pdf=await _service.getOffPdf(id: id);
+      offPdfBase64.value=base64Pdf;
 
     }
 
