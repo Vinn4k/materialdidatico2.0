@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:easmaterialdidatico/app/controller/pdf_view_controller.dart';
@@ -52,20 +53,20 @@ class PdfViewPage extends GetView<PdfViewerControllerUi> {
                   },
                 )
               : Container(),
-          GetPlatform.isAndroid
-              ? IconButton(
-                  icon: const Icon(
-                    Icons.download,
-                    color: Colors.white,
-                    semanticLabel: 'Download',
-                  ),
-                  onPressed: () {
-                    GetPlatform.isAndroid
-                        ? controller.downloadPdf(url: pdf, fileName: id)
-                        : null;
-                  },
-                )
-              : const SizedBox(),
+          // GetPlatform.isAndroid
+          //     ? IconButton(
+          //         icon: const Icon(
+          //           Icons.download,
+          //           color: Colors.white,
+          //           semanticLabel: 'Download',
+          //         ),
+          //         onPressed: () {
+          //           GetPlatform.isAndroid
+          //               ?
+          //               : null;
+          //         },
+          //       )
+          //     : const SizedBox(),
           GetPlatform.isWeb
               ? IconButton(
                   icon: const Icon(
@@ -124,15 +125,16 @@ class PdfViewPage extends GetView<PdfViewerControllerUi> {
                   ),
                 ],
               )
-            : _detectPdf(pdfOn: pdf, pdfOff: offlinePath),
+            : _detectPdf(pdfOn: pdf, pdfOff: offlinePath,pdfId: id),
       ),
     );
   }
 
-  SfPdfViewer _detectPdf({required String pdfOn, required String pdfOff}) {
+  SfPdfViewer _detectPdf({required String pdfOn, required String pdfOff,required String pdfId}) {
+
     if (pdfOff != "not") {
-      return SfPdfViewer.file(
-        File(pdfOff),
+      return SfPdfViewer.memory(
+         base64Decode(pdfOff),
         onDocumentLoaded: (e) async {
           await controller.stopTrace(trace);
         },
@@ -152,6 +154,7 @@ class PdfViewPage extends GetView<PdfViewerControllerUi> {
           trace.putAttribute('userId', controller.userID.value);
 
           await controller.stopTrace(trace);
+         await controller.downloadPdf(url: pdfOn, fileName: pdfId);
         },
         onDocumentLoadFailed: (doc) async {
           trace.putAttribute('plataforma', controller.userDiviceType.value);
