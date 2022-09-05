@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:easmaterialdidatico/app/controller/pdf_view_controller.dart';
 import 'package:easmaterialdidatico/shared/themes/app_colors.dart';
@@ -23,13 +22,13 @@ class PdfViewPage extends GetView<PdfViewerControllerUi> {
   Widget build(BuildContext context) {
     String disciplina = data["nome"] ?? "error";
     String offlinePath = data["path"] ?? "not";
+
     String id = data["id"] ?? "error";
     String pdf = data["linkPdf"] ??
         "https://firebasestorage.googleapis.com/v0/b/cefops.appspot.com/o/Logo%20Azul%20PDF.pdf?alt=media&token=92d52776-2235-4b7e-a2fa-6fe9e33b0bb1";
     trace = performance.newTrace('PDF Load time');
     trace.putAttribute('disciplina', disciplina);
 
-    controller.startTrace(trace);
     if (!GetPlatform.isWeb) {
       controller.disableScreenCapture();
     }
@@ -48,25 +47,14 @@ class PdfViewPage extends GetView<PdfViewerControllerUi> {
                   ),
                   onPressed: () {
                     _pdfViewerController.zoomLevel = 1.5;
-
-
                   },
                 )
-              : Container(),
-          // GetPlatform.isAndroid
-          //     ? IconButton(
-          //         icon: const Icon(
-          //           Icons.download,
-          //           color: Colors.white,
-          //           semanticLabel: 'Download',
-          //         ),
-          //         onPressed: () {
-          //           GetPlatform.isAndroid
-          //               ?
-          //               : null;
-          //         },
-          //       )
-          //     : const SizedBox(),
+              : Icon(
+                  offlinePath != "not"
+                      ? Icons.cloud_done_outlined
+                      : Icons.cloud_off_outlined,
+                  color: offlinePath != "not" ? Colors.green : Colors.red,
+                ),
           GetPlatform.isWeb
               ? IconButton(
                   icon: const Icon(
@@ -125,16 +113,16 @@ class PdfViewPage extends GetView<PdfViewerControllerUi> {
                   ),
                 ],
               )
-            : _detectPdf(pdfOn: pdf, pdfOff: offlinePath,pdfId: id),
+            : _detectPdf(pdfOn: pdf, pdfOff: offlinePath, pdfId: id),
       ),
     );
   }
 
-  SfPdfViewer _detectPdf({required String pdfOn, required String pdfOff,required String pdfId}) {
-
+  StatefulWidget _detectPdf(
+      {required String pdfOn, required String pdfOff, required String pdfId}) {
     if (pdfOff != "not") {
       return SfPdfViewer.memory(
-         base64Decode(pdfOff),
+        base64Decode(controller.pdfDec(pdfOff)),
         onDocumentLoaded: (e) async {
           await controller.stopTrace(trace);
         },
@@ -143,26 +131,37 @@ class PdfViewPage extends GetView<PdfViewerControllerUi> {
         },
       );
     } else {
-      return SfPdfViewer.network(
-        pdfOn,
-        key: _pdfViewerKey,
-        controller: _pdfViewerController,
-        enableTextSelection: false,
-        password: controller.password.value,
-        onDocumentLoaded: (doc) async {
-          trace.putAttribute('plataforma', controller.userDiviceType.value);
-          trace.putAttribute('userId', controller.userID.value);
+      return WillPopScope(
+          child: SfPdfViewer.network(
+            pdfOn,
+            key: _pdfViewerKey,
+            controller: _pdfViewerController,
+            enableTextSelection: false,
+            password: controller.password.value,
+            onDocumentLoaded: (doc) async {
 
-          await controller.stopTrace(trace);
-         await controller.downloadPdf(url: pdfOn, fileName: pdfId);
-        },
-        onDocumentLoadFailed: (doc) async {
-          trace.putAttribute('plataforma', controller.userDiviceType.value);
-          trace.putAttribute('userId', controller.userID.value);
-          trace.putAttribute('error', doc.error);
-          await controller.stopTrace(trace);
-        },
-      );
+              trace.putAttribute('plataforma', controller.userDiviceType.value);
+              trace.putAttribute('userId', controller.userID.value);
+
+              await controller.stopTrace(trace);
+              await controller.downloadPdf(url: pdfOn, fileName: pdfId);
+            },
+            onDocumentLoadFailed: (doc) async {
+              trace.putAttribute('plataforma', controller.userDiviceType.value);
+              trace.putAttribute('userId', controller.userID.value);
+              trace.putAttribute('error', doc.error);
+              await controller.stopTrace(trace);
+            },
+          ),
+          onWillPop: () async {
+            if (controller.pdfDownloadComplete.value) {
+              return true;
+            } else {
+              Get.snackbar(
+                  "Por favor aguarde", "Estamos sincronizando os dados");
+              return false;
+            }
+          });
     }
   }
 }

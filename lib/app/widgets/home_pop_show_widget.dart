@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -7,22 +6,30 @@ import '../../shared/themes/app_colors.dart';
 import '../controller/home_pop_show_widget_controller.dart';
 import '../data/model/home_pop_show_widget_model.dart';
 
-
-
 class HomePopShowWidget {
   HomePopShowWidgetController controller =
       Get.put(HomePopShowWidgetController());
 
   showDialog({required HomePopShowWidgetModel data}) {
     return Get.defaultDialog(
+      onWillPop: () async {
+        if (controller.showCloseButton.value) {
+          await controller.courSelect(
+              courseName: "${data.curso}", status: "closed");
+          controller.dispose();
+          Get.back();
+          return true;
+        }
+        Get.snackbar("Por favor aguarde", "");
+
+        return false;
+      },
       barrierDismissible: false,
       title: "${data.tituloPop}",
       content: Column(
         children: [
-           Image(
-            image: NetworkImage(
-                "${data.imgUrl}",
-                scale: 3),
+          Image(
+            image: NetworkImage("${data.imgUrl}", scale: 3),
           ),
           SizedBox(
             height: Get.height * 0.02,
@@ -35,14 +42,15 @@ class HomePopShowWidget {
                 width:
                     GetPlatform.isMobile ? Get.width * 0.5 : Get.width * 0.175,
                 child: ElevatedButton(
-                  onPressed: () async{
-                   await controller.courSelect(
-                        courseName: "${data.curso}",
-                        status: "open");
-                    launchUrl(Uri.parse("${data.paginaMatricula}"));
+                  onPressed: () async {
+                    await controller.courSelect(
+                        courseName: "${data.curso}", status: "open");
+                    launchUrl(
+                      Uri.parse("${data.paginaMatricula}"),
+                      mode: LaunchMode.externalApplication,
+                    );
                     controller.dispose();
                     Get.back();
-
                   },
                   style: ButtonStyle(
                       backgroundColor:
@@ -54,8 +62,8 @@ class HomePopShowWidget {
                   child: SizedBox(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children:  [
-                       const Icon(
+                      children: [
+                        const Icon(
                           Icons.ads_click,
                           color: AppColors.orange,
                         ),
@@ -65,23 +73,24 @@ class HomePopShowWidget {
                   ),
                 ),
               ),
-              Obx(
-                () {
-                  return IconButton(
-                    onPressed: controller.showCloseButton.value? () async {
-                      await controller.courSelect(
-                          courseName: "${data.curso}",
-                          status: "closed");
-                       controller.dispose();
-                       Get.back();
-                    }:null,
-                    icon:  Icon(
-                      Icons.close,
-                      color:controller.showCloseButton.value? Colors.red:Colors.grey,
-                    ),
-                  );
-                }
-              ),
+              Obx(() {
+                return IconButton(
+                  onPressed: controller.showCloseButton.value
+                      ? () async {
+                          await controller.courSelect(
+                              courseName: "${data.curso}", status: "closed");
+                          controller.dispose();
+                          Get.back();
+                        }
+                      : null,
+                  icon: Icon(
+                    Icons.close,
+                    color: controller.showCloseButton.value
+                        ? Colors.red
+                        : Colors.grey,
+                  ),
+                );
+              }),
             ],
           ),
         ],

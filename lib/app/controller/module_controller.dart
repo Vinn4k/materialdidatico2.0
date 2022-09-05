@@ -40,10 +40,6 @@ class ModuleController extends GetxController {
     group.value = data.get("turma");
     await setAccessForModules();
 
-    List<dynamic> courseList = await data.get("modulos");
-    for (var element in courseList) {
-      // userModule.add(element);
-    }
 
     return "ok";
   }

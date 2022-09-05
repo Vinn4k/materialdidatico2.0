@@ -138,10 +138,6 @@ class LoginPage extends GetView<LoginController> {
                           controller.loadingPage.value = false;
                         }
                       },
-                      child: const Text(
-                        "Entrar",
-                        style: TextStyle(color: Colors.white),
-                      ),
                       style: ButtonStyle(
                         backgroundColor:
                             MaterialStateProperty.all(AppColors.blue),
@@ -152,6 +148,10 @@ class LoginPage extends GetView<LoginController> {
                             fontSize: Get.height * 0.02,
                           ),
                         ),
+                      ),
+                      child: const Text(
+                        "Entrar",
+                        style: TextStyle(color: Colors.white),
                       ),
                     );
             },
@@ -230,10 +230,6 @@ class LoginPage extends GetView<LoginController> {
                             await controller.login(emailController.text, passowrdController.text);
                           }
                         },
-                        child: const Text(
-                          "Entrar",
-                          style: TextStyle(color: Colors.white),
-                        ),
                         style: ButtonStyle(
                           backgroundColor:
                               MaterialStateProperty.all(AppColors.blue),
@@ -244,6 +240,10 @@ class LoginPage extends GetView<LoginController> {
                               fontSize: Get.height * 0.02,
                             ),
                           ),
+                        ),
+                        child: const Text(
+                          "Entrar",
+                          style: TextStyle(color: Colors.white),
                         ),
                       );
               },

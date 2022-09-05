@@ -7,12 +7,10 @@ import 'package:easmaterialdidatico/app/widgets/group_seclect_pop_show_widget.da
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../shared/auth/firebase_auth.dart';
-import '../../shared/themes/app_colors.dart';
 import '../data/model/home_pop_show_widget_model.dart';
 import '../data/model/user_data_model.dart';
 import '../data/repository/app_monitor_repository.dart';
@@ -28,7 +26,6 @@ class HomeController extends GetxController {
 
   final FirebaseAnalytics _analytics = FirebaseAnalytics.instance;
   final FirebaseRemoteConfig firebaseRmConfig = FirebaseRemoteConfig.instance;
-  final AppMonitorRepository _monitorRepository = AppMonitorRepository();
 
 
   @override
@@ -64,6 +61,7 @@ class HomeController extends GetxController {
     List<dynamic> courseList = await data.get("cursos");
     for (var element in courseList) {
       userCourseId.add(element);
+
     }
     return "ok";
   }
