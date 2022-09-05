@@ -12,11 +12,12 @@ class CryptPdfService{
 
   }
 
-  Future<String> decryptPdf({required String pdfEncrypted}) async {
+  String decryptPdf({required String pdfEncrypted})  {
     final key = crypto.Key.fromUtf8("3gA2dkfTtlkNBdXgWcVQnhRkkWC5dxWc");
     final iv = crypto.IV.fromLength(16);
+
     final decryptLocalPdf = crypto.Encrypter(crypto.AES(key));
-    final pdfDecrypted = decryptLocalPdf.decrypt64(pdfEncrypted, iv: iv);
+    final pdfDecrypted =  decryptLocalPdf.decrypt64(pdfEncrypted, iv: iv);
     return pdfDecrypted;
   }
 }
