@@ -16,6 +16,7 @@ class FileService {
     final File file = File('$path/$fileName.eas');
     targetDirFolder.existsSync() ? null : targetDirFolder.create();
     final status = await Permission.storage.request();
+    print(file.path);
 
     final Dio dio = Dio();
     try {
@@ -25,7 +26,7 @@ class FileService {
                 deleteOnError: true, onReceiveProgress: (rec, total) {})
             .then((value) async {
           await encryptPdf(pdfPath: file.path);
-          await saveDataOffPdf(filePath: file.path, documentId: fileName);
+          // await saveDataOffPdf(filePath: file.path, documentId: fileName);
         });
       } else {
         Get.snackbar(
@@ -45,27 +46,36 @@ class FileService {
         await pdfService.encryptPdf(pdfBase64: localPdfToBase64);
     final file = File(pdfPath);
     await file.writeAsString(encryptedPdf);
-    await decryptPdf(pdfPath: file.path);
+
   }
 
-  Future<String> decryptPdf({required String pdfPath}) async {
+  String decryptPdf({required String pdfPath})  {
     final CryptPdfService pdfService = CryptPdfService();
+try{
+  final file = File(pdfPath);
+  final encryptedPdf =  file.readAsStringSync();
+  return  pdfService.decryptPdf(pdfEncrypted: encryptedPdf);}
+catch(e){
+  throw Exception("error");
 
-    final file = File(pdfPath);
-    final encryptedPdf = await file.readAsString();
-    return await pdfService.decryptPdf(pdfEncrypted: encryptedPdf);
+}
   }
 
-  Future<bool> pdfIsSync({required String id}) async {
-    final prefs = await SharedPreferences.getInstance();
-    final data = prefs.get(id);
-    late bool ispresent;
-    if (data != null) {
-      ispresent = true;
+  Future<String> pdfIsSync({required String id}) async {
+    final targetDir = await getExternalStorageDirectory();
+    final targetDirFolder = Directory('${targetDir?.path}/off/$id.eas');
+    final File  localFile=File(targetDirFolder.path);
+   late String pdfDecrypted;
+   bool exist=await localFile.exists();
+    if (exist) {
+
+      pdfDecrypted =targetDirFolder.path;
     } else {
-      ispresent = false;
+      pdfDecrypted="nd";
+
     }
-    return ispresent;
+
+    return pdfDecrypted;
   }
 
   Future<String> getOffPdf({required String id}) async {
@@ -74,7 +84,7 @@ class FileService {
 
     Map<String, dynamic> dataModel = json.decode(localData!);
     String path = dataModel["filePath"];
-    final String pdfDecrypted = await decryptPdf(pdfPath: path);
+    final String pdfDecrypted = decryptPdf(pdfPath: path);
     return pdfDecrypted;
   }
 
