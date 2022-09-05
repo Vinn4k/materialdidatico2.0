@@ -55,7 +55,7 @@ class SubjectPage extends GetView<SubjectController> {
                             builder: (BuildContext context,
                                 AsyncSnapshot<QuerySnapshot> snapshot) {
                               if (snapshot.hasData) {
-                                return ListView.separated(
+                                return  ListView.separated(
                                     itemBuilder:
                                         (BuildContext context, int index) {
                                       Map<String, String> data = {
@@ -74,7 +74,7 @@ class SubjectPage extends GetView<SubjectController> {
                                         child: ListTile(
                                           leading: Icon(
                                             snapshot.data?.docs[index]["ativo"]
-                                                ? Icons.picture_as_pdf
+                                                ? Icons.menu_book
                                                 : Icons.do_disturb_alt_rounded,
                                             color: snapshot.data?.docs[index]
                                                     .get("ativo")
@@ -91,10 +91,10 @@ class SubjectPage extends GetView<SubjectController> {
                                           onTap: snapshot.data?.docs[index]
                                                   ["ativo"]
                                               ? () async {
-                                          bool isOffline=  await controller.pdfIsSync(id: snapshot.data?.docs[index]["id"]);
-                                          isOffline? data["path"]=controller.offFilePath.value:"not";
-                                                  Get.toNamed(Routes.PDFVIEW,
-                                                      parameters: data);
+                                                  controller.pdfIsSync(
+                                                      id: snapshot.data
+                                                          ?.docs[index]["id"],
+                                                      data: data);
                                                 }
                                               : () {
                                                   Get.snackbar("Aviso",
