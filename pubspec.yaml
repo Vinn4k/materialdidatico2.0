@@ -52,6 +52,7 @@ dependencies:
   path_provider: ^2.0.9
   dio:
   permission_handler: ^9.2.0
+  connectivity_plus: ^2.3.6+1
 
 
 
