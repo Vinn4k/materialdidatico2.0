@@ -31,35 +31,36 @@ class SubjectController extends GetxController {
     return repository.getSubjects(courseId, moduleId);
   }
 
-  Future<String> pdfIsSync(
+  Future<void> pdfIsSync(
       {required String id, required Map<String, String> data}) async {
     loading.value = true;
 
-    final String offline = await _service.pdfIsSync(id: id);
+   if(!GetPlatform.isWeb){
+     final String offline = await _service.pdfIsSync(id: id);
 
-    if (offline != "nd") {
-      data["path"] = offline;
-      loading.value = false;
-      Get.back();
+     if (offline != "nd") {
+       data["path"] = offline;
+       loading.value = false;
 
-      Get.toNamed(Routes.PDFVIEW, parameters: data);
+       Get.toNamed(Routes.PDFVIEW, parameters: data);
 
-    } else {
-      var result = await Connectivity().checkConnectivity();
+     } else {
+       var result = await Connectivity().checkConnectivity();
 
-      if (result != ConnectivityResult.none) {
-        data["path"] = "not";
-        loading.value = false;
-        Get.back();
-        Get.toNamed(Routes.PDFVIEW, parameters: data);
-      }else{
-        Get.back();
-        Get.snackbar("Sem conexão", "Não há arquivos sincronizados ");
+       if (result != ConnectivityResult.none) {
+         data["path"] = "not";
+         loading.value = false;
+         Get.toNamed(Routes.PDFVIEW, parameters: data);
+       }else{
+         Get.snackbar("Sem conexão", "Não há arquivos sincronizados ");
 
-      }
-    }
+       }
+     }
+   }else{
+     Get.toNamed(Routes.PDFVIEW, parameters: data);
+
+   }
 
 
-    return offline;
   }
 }
